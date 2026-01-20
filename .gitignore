@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+# Archivos de Entorno (SENSIBLES)
+.env
+.env.local
+.env.*
+!.env.example
