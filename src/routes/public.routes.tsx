@@ -4,6 +4,8 @@ import Login from '../pages/public/Login';
 import Register from '../pages/public/Register';
 import MotorcyclesCatalog from '../pages/public/MotorcyclesCatalog';
 import MotorcycleDetail from '../pages/public/MotorcycleDetail';
+import PaymentSuccess from '../pages/public/PaymentSuccess';
+import Contact from '../pages/public/Contact';
 
 export const publicRoutes = {
     path: '/',
@@ -14,5 +16,7 @@ export const publicRoutes = {
         { path: 'register', element: <Register /> },
         { path: 'motorcycles', element: <MotorcyclesCatalog /> },
         { path: 'motorcycles/:id', element: <MotorcycleDetail /> },
+        { path: 'pago-exitoso', element: <PaymentSuccess /> },
+        { path: 'contact', element: <Contact /> },
     ],
 };

@@ -78,6 +78,12 @@ export default function AdminLayout() {
                         </svg>
                         Stock
                     </Link>
+                    <Link to="/admin/leads" className={`flex items-center gap-2 font-medium transition-all px-3 py-2 rounded-lg ${isActive('/admin/leads')}`}>
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                        </svg>
+                        Mensajes
+                    </Link>
                 </div>
 
                 {/* Right Section: User Info + Logout */}
@@ -124,7 +130,7 @@ export default function AdminLayout() {
                         </button>
                     </div>
 
-                    <nav className="p-4 space-y-2 overflow-y-auto max-h-[calc(100vh-100px)]">
+                    <nav className="p-4 space-y-2 overflow-y-auto max-h-[calc(100vh-100px)] pb-24">
                         {/* Mobile Navigation Links (Shown only on small screens conceptually, but kept in sidebar for now) */}
                         <div className="space-y-1">
                             <p className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">General</p>
@@ -206,6 +212,39 @@ export default function AdminLayout() {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                                 </svg>
                                 Inventario
+                            </Link>
+
+                            <Link
+                                to="/admin/leads"
+                                onClick={() => setIsSidebarOpen(false)}
+                                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${isActive('/admin/leads')}`}
+                            >
+                                <svg className="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                                </svg>
+                                Mensajes
+                            </Link>
+
+                            <Link
+                                to="/admin/logs"
+                                onClick={() => setIsSidebarOpen(false)}
+                                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${isActive('/admin/logs')}`}
+                            >
+                                <svg className="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Logs
+                            </Link>
+
+                            <Link
+                                to="/admin/comments"
+                                onClick={() => setIsSidebarOpen(false)}
+                                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${isActive('/admin/comments')}`}
+                            >
+                                <svg className="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
+                                Reseñas
                             </Link>
                         </div>
                     </nav>

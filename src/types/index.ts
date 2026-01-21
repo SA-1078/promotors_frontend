@@ -37,6 +37,7 @@ export interface Motorcycle {
     id_categoria: number;
     imagen_url: string;
     categoria?: Category;
+    deletedAt?: string;
 }
 
 export interface CreateMotorcycleDto {
@@ -48,6 +49,7 @@ export interface CreateMotorcycleDto {
     descripcion: string;
     id_categoria: number;
     imagen_url: string;
+    stock?: number;
 }
 
 // Category types
@@ -72,7 +74,13 @@ export interface Inventory {
 }
 
 export interface UpdateInventoryDto {
-    cantidad_stock: number;
+    stock_actual: number;
+}
+
+export interface CreateInventoryDto {
+    id_moto: number;
+    stock_actual: number;
+    ubicacion: string;
 }
 
 // Sale types
@@ -111,13 +119,13 @@ export interface CreateSaleDto {
 
 // CRM/Lead types
 export interface Lead {
-    _id: string;
+    id_lead: number;
     nombre: string;
     email: string;
     telefono: string;
     mensaje: string;
     estado: string;
-    fecha_creacion: string;
+    fecha: string;
 }
 
 export interface CreateLeadDto {
@@ -129,11 +137,8 @@ export interface CreateLeadDto {
 }
 
 // Cart types (MongoDB)
-export interface CartItem {
-    id_moto: number;
-    cantidad: number;
-    precio_unitario: number;
-    motocicleta?: Motorcycle;
+export interface CartItem extends Motorcycle {
+    quantity: number;
 }
 
 export interface Cart {
@@ -154,12 +159,15 @@ export interface AddToCartDto {
 // Comment types (MongoDB)
 export interface Comment {
     _id: string;
-    id_usuario: number;
-    id_moto: number;
-    contenido: string;
+    usuario_id: number;
+    motocicleta_id: number;
+    comentario: string;
     calificacion: number;
-    fecha_creacion: string;
+    fecha: string;
+    moderado?: boolean;
+    // Optional fields for UI joining
     usuario?: User;
+    motocicleta?: Motorcycle;
 }
 
 export interface CreateCommentDto {
@@ -181,10 +189,12 @@ export interface ViewHistory {
 // System Logs types (MongoDB)
 export interface SystemLog {
     _id: string;
-    nivel: string;
-    mensaje: string;
+    usuario_id: number;
+    accion: string;
     fecha: string;
-    metadata?: any;
+    ip?: string;
+    detalles?: any;
+    usuario?: User;
 }
 
 // Pagination

@@ -7,14 +7,15 @@ export const getMotorcycles = async (params?: {
     categoria?: number;
     marca?: string;
     search?: string;
+    withDeleted?: boolean;
 }): Promise<Motorcycle[]> => {
     const response = await api.get<{ success: boolean; data: { items: Motorcycle[] } }>('/motorcycles', { params });
-    return response.data.data.items; // Extract items from nested structure
+    return response.data.data.items;
 };
 
 export const getMotorcycleById = async (id: number): Promise<Motorcycle> => {
     const response = await api.get<{ success: boolean; data: Motorcycle }>(`/motorcycles/${id}`);
-    return response.data.data; // Extract data from nested structure
+    return response.data.data;
 };
 
 export const createMotorcycle = async (data: CreateMotorcycleDto): Promise<Motorcycle> => {
@@ -27,6 +28,10 @@ export const updateMotorcycle = async (id: number, data: Partial<CreateMotorcycl
     return response.data;
 };
 
-export const deleteMotorcycle = async (id: number): Promise<void> => {
-    await api.delete(`/motorcycles/${id}`);
+export const deleteMotorcycle = async (id: number, type: 'soft' | 'hard' = 'soft'): Promise<void> => {
+    await api.delete(`/motorcycles/${id}?type=${type}`);
+};
+
+export const restoreMotorcycle = async (id: number): Promise<void> => {
+    await api.post(`/motorcycles/${id}/restore`);
 };
