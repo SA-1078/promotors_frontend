@@ -4,21 +4,16 @@ import AdminLayout from '../layouts/AdminLayout';
 import UsersManagement from '../pages/admin/UsersManagement';
 import MotorcyclesManagement from '../pages/admin/MotorcyclesManagement';
 import CategoriesManagement from '../pages/admin/CategoriesManagement';
+import InventoryManagement from '../pages/admin/InventoryManagement';
+import SalesManagement from '../pages/admin/SalesManagement';
+import LeadsManagement from '../pages/admin/LeadsManagement';
+import CommentsManagement from '../pages/admin/CommentsManagement';
+import SystemLogs from '../pages/admin/SystemLogs';
+import AnalyticsDashboard from '../pages/admin/AnalyticsDashboard';
 
-// Placeholder for admin dashboard
-function AdminDashboard() {
-    return (
-        <div className="p-8">
-            <h1 className="text-3xl font-display font-bold gradient-text mb-4">
-                Panel de Administración
-            </h1>
-            <p className="text-gray-400">
-                Bienvenido al panel de administración de MotoRShop
-            </p>
-        </div>
-    );
-}
+import AdminDashboard from '../pages/admin/AdminDashboard';
 
+// Routes configuration for Admin Panel
 export const adminRoutes = {
     path: '/admin',
     element: (
@@ -31,5 +26,11 @@ export const adminRoutes = {
         { path: 'users', element: <UsersManagement /> },
         { path: 'motorcycles', element: <MotorcyclesManagement /> },
         { path: 'categories', element: <CategoriesManagement /> },
+        { path: 'inventory', element: <InventoryManagement /> },
+        { path: 'sales', element: <SalesManagement /> },
+        { path: 'leads', element: <LeadsManagement /> },
+        { path: 'comments', element: <CommentsManagement /> },
+        { path: 'logs', element: <SystemLogs /> },
+        { path: 'analytics', element: <AnalyticsDashboard /> },
     ],
 };

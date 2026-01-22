@@ -1,7 +1,7 @@
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useMemo, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import { loginApi, registerApi } from '../services/auth.service';
+import { loginApi, registerApi, verifyTokenApi } from '../services/auth.service';
 import type { User, LoginPayload, RegisterPayload } from '../types';
 
 interface AuthContextType {
@@ -36,6 +36,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [token, setToken] = useState<string | null>(() => {
         return localStorage.getItem('auth_token');
     });
+
+    useEffect(() => {
+        const verifySession = async () => {
+            if (token) {
+                try {
+                    const isValid = await verifyTokenApi();
+                    if (!isValid) {
+                        console.warn('Session invalid or backend unreachable. Logging out.');
+                        logout();
+                    }
+                } catch (error) {
+                    console.error('Session verification error:', error);
+                    logout();
+                }
+            }
+        };
+
+        verifySession();
+    }, []);
 
     const login = async (payload: LoginPayload) => {
         const { access_token: token, user: apiUser } = await loginApi(payload);

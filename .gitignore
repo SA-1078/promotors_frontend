@@ -32,3 +32,9 @@ dist-ssr/
 # OS específicos
 Thumbs.db
 desktop.ini
+
+# Archivos de Entorno (SENSIBLES)
+.env
+.env.local
+.env.*
+!.env.example

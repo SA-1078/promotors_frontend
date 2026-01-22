@@ -7,18 +7,17 @@ export default {
     theme: {
         extend: {
             colors: {
-                // Motorcycle-themed color palette
                 primary: {
-                    50: '#f0f9ff',
-                    100: '#e0f2fe',
-                    200: '#bae6fd',
-                    300: '#7dd3fc',
-                    400: '#38bdf8',
-                    500: '#0ea5e9',
-                    600: '#0284c7',
-                    700: '#0369a1',
-                    800: '#075985',
-                    900: '#0c4a6e',
+                    50: '#fff7ed',
+                    100: '#ffedd5',
+                    200: '#fed7aa',
+                    300: '#fdba74',
+                    400: '#fb923c',
+                    500: '#f97316', // Main Orange
+                    600: '#ea580c',
+                    700: '#c2410c',
+                    800: '#9a3412',
+                    900: '#7c2d12',
                 },
                 dark: {
                     950: '#0a0a0a',
@@ -28,12 +27,11 @@ export default {
                     600: '#404040',
                     500: '#525252',
                 },
-                accent: {
-                    orange: '#ff6b35',
-                    red: '#dc2626',
-                    yellow: '#fbbf24',
-                    green: '#10b981',
-                },
+                'accent-orange': '#ff6b35',
+                'accent-blue': '#3B82F6',
+                'accent-red': '#dc2626',
+                'accent-yellow': '#fbbf24',
+                'accent-green': '#10b981',
                 metallic: {
                     silver: '#c0c0c0',
                     chrome: '#e8e8e8',
@@ -43,6 +41,7 @@ export default {
             fontFamily: {
                 sans: ['Inter', 'system-ui', 'sans-serif'],
                 display: ['Outfit', 'sans-serif'],
+                body: ['Inter', 'sans-serif'],
             },
             backgroundImage: {
                 'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
