@@ -3,6 +3,10 @@ import { getMotorcycles } from '../../services/motorcycles.service';
 import { getCategories } from '../../services/categories.service';
 import type { Motorcycle, Category } from '../../types';
 import MotorcycleCard from '../../components/motorcycles/MotorcycleCard';
+import { Button } from '../../components/ui/Button';
+import { Input } from '../../components/ui/Input';
+import { Card } from '../../components/ui/Card';
+import { Badge } from '../../components/ui/Badge';
 
 export default function MotorcyclesCatalog() {
     const [motorcycles, setMotorcycles] = useState<Motorcycle[]>([]);
@@ -53,89 +57,98 @@ export default function MotorcyclesCatalog() {
         <div className="min-h-screen bg-dark-900 py-12">
             <div className="container-custom">
                 {/* Header */}
-                <div className="mb-8">
-                    <h1 className="text-4xl font-display font-bold gradient-text mb-3">
+                <div className="mb-8 text-center md:text-left">
+                    <h1 className="text-4xl md:text-5xl font-display font-bold gradient-text mb-3">
                         Catálogo de Motocicletas
                     </h1>
-                    <p className="text-gray-400">
-                        Explora nuestra colección de {motorcycles.length} motocicletas
+                    <p className="text-gray-400 text-lg">
+                        Explora nuestra colección de <span className="text-white font-bold">{motorcycles.length}</span> máquinas de alto rendimiento
                     </p>
                 </div>
 
                 {/* Filters */}
-                <div className="card p-6 mb-8">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Card className="p-6 mb-8 bg-dark-800/80 backdrop-blur-sm border-dark-700">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {/* Search */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
-                                Buscar
-                            </label>
-                            <input
-                                type="text"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                placeholder="Nombre, marca o modelo..."
-                                className="input"
-                            />
-                        </div>
+                        <Input
+                            label="Buscar"
+                            placeholder="Nombre, marca o modelo..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            icon={
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            }
+                        />
 
                         {/* Category Filter */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                            <label className="block text-sm font-medium text-gray-400 mb-1.5 ml-1">
                                 Categoría
                             </label>
-                            <select
-                                value={selectedCategory || ''}
-                                onChange={(e) => setSelectedCategory(e.target.value ? Number(e.target.value) : null)}
-                                className="input"
-                            >
-                                <option value="">Todas las categorías</option>
-                                {categories.map((cat) => (
-                                    <option key={cat.id_categoria} value={cat.id_categoria}>
-                                        {cat.nombre}
-                                    </option>
-                                ))}
-                            </select>
+                            <div className="relative">
+                                <select
+                                    value={selectedCategory || ''}
+                                    onChange={(e) => setSelectedCategory(e.target.value ? Number(e.target.value) : null)}
+                                    className="w-full bg-dark-800 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 appearance-none"
+                                >
+                                    <option value="">Todas las categorías</option>
+                                    {categories.map((cat) => (
+                                        <option key={cat.id_categoria} value={cat.id_categoria}>
+                                            {cat.nombre}
+                                        </option>
+                                    ))}
+                                </select>
+                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                </div>
+                            </div>
                         </div>
 
                         {/* Brand Filter */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                            <label className="block text-sm font-medium text-gray-400 mb-1.5 ml-1">
                                 Marca
                             </label>
-                            <select
-                                value={selectedBrand}
-                                onChange={(e) => setSelectedBrand(e.target.value)}
-                                className="input"
-                            >
-                                <option value="">Todas las marcas</option>
-                                {brands.map((brand) => (
-                                    <option key={brand} value={brand}>
-                                        {brand}
-                                    </option>
-                                ))}
-                            </select>
+                            <div className="relative">
+                                <select
+                                    value={selectedBrand}
+                                    onChange={(e) => setSelectedBrand(e.target.value)}
+                                    className="w-full bg-dark-800 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 appearance-none"
+                                >
+                                    <option value="">Todas las marcas</option>
+                                    {brands.map((brand) => (
+                                        <option key={brand} value={brand}>
+                                            {brand}
+                                        </option>
+                                    ))}
+                                </select>
+                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     {/* Active Filters Display */}
                     {(selectedCategory || selectedBrand || searchTerm) && (
-                        <div className="mt-4 flex items-center gap-2">
+                        <div className="mt-6 pt-4 border-t border-dark-700 flex flex-wrap items-center gap-3">
                             <span className="text-sm text-gray-400">Filtros activos:</span>
                             {searchTerm && (
-                                <span className="text-xs bg-primary-600/20 text-primary-400 px-3 py-1 rounded-full">
-                                    "{searchTerm}"
-                                </span>
+                                <Badge variant="primary" size="sm" className="flex items-center gap-1">
+                                    🔍 "{searchTerm}"
+                                </Badge>
                             )}
                             {selectedCategory && (
-                                <span className="text-xs bg-primary-600/20 text-primary-400 px-3 py-1 rounded-full">
-                                    {categories.find(c => c.id_categoria === selectedCategory)?.nombre}
-                                </span>
+                                <Badge variant="info" size="sm" className="flex items-center gap-1">
+                                    🏷️ {categories.find(c => c.id_categoria === selectedCategory)?.nombre}
+                                </Badge>
                             )}
                             {selectedBrand && (
-                                <span className="text-xs bg-primary-600/20 text-primary-400 px-3 py-1 rounded-full">
-                                    {selectedBrand}
-                                </span>
+                                <Badge variant="success" size="sm" className="flex items-center gap-1">
+                                    🏍️ {selectedBrand}
+                                </Badge>
                             )}
                             <button
                                 onClick={() => {
@@ -143,68 +156,72 @@ export default function MotorcyclesCatalog() {
                                     setSelectedCategory(null);
                                     setSelectedBrand('');
                                 }}
-                                className="text-xs text-red-400 hover:text-red-300 underline ml-2"
+                                className="text-xs text-accent-red hover:text-red-400 underline ml-auto transition-colors font-medium"
                             >
                                 Limpiar filtros
                             </button>
                         </div>
                     )}
-                </div>
+                </Card>
 
                 {/* Results Count */}
-                <div className="mb-6 text-gray-400">
-                    {filteredMotorcycles.length} {filteredMotorcycles.length === 1 ? 'motocicleta encontrada' : 'motocicletas encontradas'}
+                <div className="mb-6 flex justify-between items-center text-gray-400">
+                    <p>{filteredMotorcycles.length} {filteredMotorcycles.length === 1 ? 'motocicleta encontrada' : 'motocicletas encontradas'}</p>
                 </div>
 
                 {/* Loading State */}
                 {loading && (
-                    <div className="text-center py-12">
-                        <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
-                        <p className="text-gray-400 mt-4">Cargando motocicletas...</p>
+                    <div className="text-center py-20">
+                        <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+                        <p className="text-gray-400 mt-4 animate-pulse">Cargando catálogo...</p>
                     </div>
                 )}
 
                 {/* Error State */}
                 {error && (
-                    <div className="card p-6 bg-red-500/10 border-red-500 text-center">
-                        <p className="text-red-400">{error}</p>
-                        <button onClick={loadData} className="btn-primary mt-4">
-                            Reintentar
-                        </button>
-                    </div>
+                    <Card className="p-8 bg-accent-red/5 border-accent-red/20 text-center max-w-lg mx-auto">
+                        <div className="w-16 h-16 bg-accent-red/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg className="w-8 h-8 text-accent-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </div>
+                        <h3 className="text-xl font-bold text-white mb-2">Error al cargar</h3>
+                        <p className="text-red-400 mb-6">{error}</p>
+                        <Button onClick={loadData} variant="danger" size="sm">
+                            Reintentar Conexión
+                        </Button>
+                    </Card>
                 )}
 
                 {/* Motorcycles Grid */}
                 {!loading && !error && (
                     <>
                         {filteredMotorcycles.length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                 {filteredMotorcycles.map((motorcycle) => (
                                     <MotorcycleCard key={motorcycle.id_moto} motorcycle={motorcycle} />
                                 ))}
                             </div>
                         ) : (
-                            <div className="card p-12 text-center">
-                                <svg className="w-16 h-16 text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            <Card className="p-16 text-center border-dashed border-dark-600 bg-transparent">
+                                <svg className="w-20 h-20 text-dark-500 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                <h3 className="text-xl font-bold text-gray-400 mb-2">
-                                    No se encontraron motocicletas
+                                <h3 className="text-2xl font-bold text-white mb-2">
+                                    No se encontraron resultados
                                 </h3>
-                                <p className="text-gray-500 mb-4">
-                                    Intenta ajustar los filtros de búsqueda
+                                <p className="text-gray-400 mb-8 max-w-sm mx-auto">
+                                    No hay motocicletas que coincidan con tu búsqueda. Intenta con otros términos.
                                 </p>
-                                <button
+                                <Button
                                     onClick={() => {
                                         setSearchTerm('');
                                         setSelectedCategory(null);
                                         setSelectedBrand('');
                                     }}
-                                    className="btn-secondary"
+                                    variant="secondary"
                                 >
-                                    Limpiar filtros
-                                </button>
-                            </div>
+                                    Borrar Filtros
+                                </Button>
+                            </Card>
                         )}
                     </>
                 )}

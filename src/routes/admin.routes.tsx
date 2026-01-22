@@ -9,6 +9,7 @@ import SalesManagement from '../pages/admin/SalesManagement';
 import LeadsManagement from '../pages/admin/LeadsManagement';
 import CommentsManagement from '../pages/admin/CommentsManagement';
 import SystemLogs from '../pages/admin/SystemLogs';
+import AnalyticsDashboard from '../pages/admin/AnalyticsDashboard';
 
 import AdminDashboard from '../pages/admin/AdminDashboard';
 
@@ -30,5 +31,6 @@ export const adminRoutes = {
         { path: 'leads', element: <LeadsManagement /> },
         { path: 'comments', element: <CommentsManagement /> },
         { path: 'logs', element: <SystemLogs /> },
+        { path: 'analytics', element: <AnalyticsDashboard /> },
     ],
 };

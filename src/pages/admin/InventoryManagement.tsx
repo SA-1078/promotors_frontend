@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react';
 import { inventoryService } from '../../services/inventory.service';
 import type { Inventory } from '../../types';
 import { formatCurrency } from '../../utils/format';
+import { Card, CardHeader } from '../../components/ui/Card';
+import { Button } from '../../components/ui/Button';
+import { Badge } from '../../components/ui/Badge';
+import { Input } from '../../components/ui/Input';
 
 export default function InventoryManagement() {
     const [inventory, setInventory] = useState<Inventory[]>([]);
@@ -72,35 +76,34 @@ export default function InventoryManagement() {
     );
 
     return (
-        <div className="p-6 md:p-8 animate-fade-in">
+        <div className="p-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
-                    <h1 className="text-3xl font-display font-bold gradient-text">
+                    <h1 className="text-3xl font-display font-bold gradient-text mb-2 animate-fade-in">
                         Gestión de Inventario
                     </h1>
-                    <p className="text-gray-400 mt-2">
+                    <p className="text-gray-400">
                         Controla el stock de tus motocicletas
                     </p>
                 </div>
 
-                <div className="flex items-center gap-4 w-full md:w-auto">
-                    <label className="flex items-center gap-2 cursor-pointer">
+                <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
+                    <label className="flex items-center gap-2 cursor-pointer bg-dark-800 px-4 py-2 rounded-lg border border-dark-700 hover:border-dark-600 transition-colors">
                         <input
                             type="checkbox"
                             checked={showInactive}
                             onChange={(e) => setShowInactive(e.target.checked)}
-                            className="form-checkbox h-5 w-5 text-primary-500 rounded border-gray-600 bg-dark-800 focus:ring-primary-500 transition duration-150 ease-in-out"
+                            className="form-checkbox text-primary-500 rounded bg-dark-900 border-dark-600 focus:ring-primary-500 focus:ring-offset-0"
                         />
-                        <span className="text-gray-300 text-sm font-medium select-none">Mostrar Inactivos</span>
+                        <span className="text-sm text-gray-300 font-medium select-none">Mostrar Inactivos</span>
                     </label>
 
                     <div className="relative flex-1 md:w-64">
-                        <input
-                            type="text"
+                        <Input
                             placeholder="Buscar..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-dark-800 border border-dark-700 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:border-primary-500 transition-colors text-white"
+                            className="pl-10 text-white"
                         />
                         <svg className="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -111,27 +114,32 @@ export default function InventoryManagement() {
 
             {loading ? (
                 <div className="flex justify-center py-20">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
                 </div>
             ) : (
-                <div className="bg-dark-800 rounded-xl overflow-hidden shadow-xl border border-dark-700">
+                <Card variant="glass" className="overflow-hidden border-dark-700 shadow-xl">
+                    <CardHeader className="flex justify-between items-center bg-dark-800/50">
+                        <h3 className="text-lg font-semibold text-white">Estado del Inventario</h3>
+                        <Badge variant="primary" size="sm">{filteredInventory.length} Items</Badge>
+                    </CardHeader>
+
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">
-                            <thead className="bg-dark-900 border-b border-dark-700">
+                            <thead className="bg-dark-800/80 backdrop-blur-sm border-b border-dark-700">
                                 <tr>
-                                    <th className="px-6 py-4 font-semibold text-gray-400">Motocicleta</th>
-                                    <th className="px-6 py-4 font-semibold text-gray-400">Precio</th>
-                                    <th className="px-6 py-4 font-semibold text-gray-400">Stock Actual</th>
-                                    <th className="px-6 py-4 font-semibold text-gray-400">Estado</th>
-                                    <th className="px-6 py-4 font-semibold text-gray-400">Acciones</th>
+                                    <th className="px-6 py-4 font-bold text-xs text-primary-300 uppercase tracking-wider">Motocicleta</th>
+                                    <th className="px-6 py-4 font-bold text-xs text-primary-300 uppercase tracking-wider">Precio</th>
+                                    <th className="px-6 py-4 font-bold text-xs text-primary-300 uppercase tracking-wider">Stock Actual</th>
+                                    <th className="px-6 py-4 font-bold text-xs text-primary-300 uppercase tracking-wider">Estado</th>
+                                    <th className="px-6 py-4 font-bold text-xs text-primary-300 uppercase tracking-wider text-right">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-dark-700">
                                 {filteredInventory.map((item) => (
-                                    <tr key={item.id_inventario} className={`hover:bg-dark-700/50 transition-colors ${item.motocicleta?.deletedAt ? 'bg-red-900/10' : ''}`}>
+                                    <tr key={item.id_inventario} className={`hover:bg-dark-700/30 transition-colors group ${item.motocicleta?.deletedAt ? 'bg-red-900/5 hover:bg-red-900/10' : ''}`}>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-4">
-                                                <div className={`w-12 h-12 rounded-lg overflow-hidden bg-dark-900 flex-shrink-0 relative ${item.motocicleta?.deletedAt ? 'grayscale' : ''}`}>
+                                                <div className={`w-12 h-12 rounded-lg overflow-hidden bg-dark-900 flex-shrink-0 relative border border-dark-700 ${item.motocicleta?.deletedAt ? 'grayscale' : ''}`}>
                                                     {item.motocicleta?.deletedAt && (
                                                         <div className="absolute inset-0 bg-red-500/20 z-10 flex items-center justify-center">
                                                             <svg className="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -159,16 +167,14 @@ export default function InventoryManagement() {
                                                             {item.motocicleta?.nombre}
                                                         </p>
                                                         {item.motocicleta?.deletedAt && (
-                                                            <span className="bg-red-500/20 text-red-400 text-[10px] px-1.5 py-0.5 rounded border border-red-500/30">
-                                                                Inactivo
-                                                            </span>
+                                                            <Badge variant="danger" size="sm">Inactivo</Badge>
                                                         )}
                                                     </div>
                                                     <p className="text-sm text-gray-400">{item.motocicleta?.marca}</p>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-gray-300">
+                                        <td className="px-6 py-4 text-primary-400 font-bold font-mono">
                                             {formatCurrency(Number(item.motocicleta?.precio || 0))}
                                         </td>
                                         <td className="px-6 py-4">
@@ -178,30 +184,27 @@ export default function InventoryManagement() {
                                         </td>
                                         <td className="px-6 py-4">
                                             {item.motocicleta?.deletedAt ? (
-                                                <span className="bg-gray-500/10 text-gray-400 px-3 py-1 rounded-full text-xs font-bold border border-gray-500/20">
-                                                    Inactivo
-                                                </span>
+                                                <Badge variant="outline" className="text-gray-400 border-gray-600">Archivado</Badge>
                                             ) : item.cantidad_stock === 0 ? (
-                                                <span className="bg-red-500/10 text-red-500 px-3 py-1 rounded-full text-xs font-bold border border-red-500/20">
-                                                    Agotado
-                                                </span>
+                                                <Badge variant="danger" size="sm">Agotado</Badge>
                                             ) : item.cantidad_stock < 5 ? (
-                                                <span className="bg-yellow-500/10 text-yellow-500 px-3 py-1 rounded-full text-xs font-bold border border-yellow-500/20">
-                                                    Bajo Stock
-                                                </span>
+                                                <Badge variant="warning" size="sm">Bajo Stock</Badge>
                                             ) : (
-                                                <span className="bg-green-500/10 text-green-500 px-3 py-1 rounded-full text-xs font-bold border border-green-500/20">
-                                                    Disponible
-                                                </span>
+                                                <Badge variant="success" size="sm">Disponible</Badge>
                                             )}
                                         </td>
-                                        <td className="px-6 py-4">
-                                            <button
+                                        <td className="px-6 py-4 text-right">
+                                            <Button
                                                 onClick={() => openEditModal(item)}
-                                                className="text-primary-400 hover:text-primary-300 font-medium transition-colors"
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-10 w-10 p-0 rounded-full text-primary-400 hover:text-white hover:bg-primary-500/20 transition-all"
+                                                title="Actualizar Stock"
                                             >
-                                                Actualizar
-                                            </button>
+                                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                                </svg>
+                                            </Button>
                                         </td>
                                     </tr>
                                 ))}
@@ -215,7 +218,7 @@ export default function InventoryManagement() {
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </Card>
             )}
 
             {/* Edit Stock Modal */}

@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { salesService } from '../../services/sales.service';
 import type { Sale } from '../../types';
 import { formatCurrency, formatDate } from '../../utils/format';
+import { Card, CardHeader } from '../../components/ui/Card';
+import { Button } from '../../components/ui/Button';
+import { Badge } from '../../components/ui/Badge';
 
 export default function SalesManagement() {
     const [sales, setSales] = useState<Sale[]>([]);
@@ -32,63 +35,77 @@ export default function SalesManagement() {
         setIsDetailModalOpen(true);
     };
 
+    const getStatusBadge = (status: string) => {
+        const s = status.toLowerCase();
+        if (['completado', 'completada'].includes(s)) return <Badge variant="success" size="sm">COMPLETADO</Badge>;
+        if (['pendiente'].includes(s)) return <Badge variant="warning" size="sm">PENDIENTE</Badge>;
+        return <Badge variant="danger" size="sm">{status.toUpperCase()}</Badge>;
+    };
+
     return (
-        <div className="p-6 md:p-8 animate-fade-in">
+        <div className="p-6">
             <div className="mb-8">
-                <h1 className="text-3xl font-display font-bold gradient-text">
+                <h1 className="text-3xl font-display font-bold gradient-text mb-2 animate-fade-in">
                     Gestión de Ventas
                 </h1>
-                <p className="text-gray-400 mt-2">
+                <p className="text-gray-400">
                     Historial de órdenes y transacciones
                 </p>
             </div>
 
             {loading ? (
                 <div className="flex justify-center py-20">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
                 </div>
             ) : (
-                <div className="bg-dark-800 rounded-xl overflow-hidden shadow-xl border border-dark-700">
+                <Card variant="glass" className="overflow-hidden border-dark-700 shadow-xl">
+                    <CardHeader className="flex justify-between items-center bg-dark-800/50">
+                        <h3 className="text-lg font-semibold text-white">Últimas Ventas</h3>
+                        <Badge variant="primary" size="sm">{sales.length} Registros</Badge>
+                    </CardHeader>
+
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">
-                            <thead className="bg-dark-900 border-b border-dark-700">
+                            <thead className="bg-dark-800/80 backdrop-blur-sm border-b border-dark-700">
                                 <tr>
-                                    <th className="px-6 py-4 font-semibold text-gray-400">ID Venta</th>
-                                    <th className="px-6 py-4 font-semibold text-gray-400">Cliente</th>
-                                    <th className="px-6 py-4 font-semibold text-gray-400">Fecha</th>
-                                    <th className="px-6 py-4 font-semibold text-gray-400">Total</th>
-                                    <th className="px-6 py-4 font-semibold text-gray-400">Estado</th>
-                                    <th className="px-6 py-4 font-semibold text-gray-400">Acciones</th>
+                                    <th className="px-6 py-4 font-bold text-xs text-primary-300 uppercase tracking-wider">ID Venta</th>
+                                    <th className="px-6 py-4 font-bold text-xs text-primary-300 uppercase tracking-wider">Cliente</th>
+                                    <th className="px-6 py-4 font-bold text-xs text-primary-300 uppercase tracking-wider">Fecha</th>
+                                    <th className="px-6 py-4 font-bold text-xs text-primary-300 uppercase tracking-wider">Total</th>
+                                    <th className="px-6 py-4 font-bold text-xs text-primary-300 uppercase tracking-wider">Estado</th>
+                                    <th className="px-6 py-4 font-bold text-xs text-primary-300 uppercase tracking-wider text-right">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-dark-700">
                                 {sales.map((sale) => (
-                                    <tr key={sale.id_venta} className="hover:bg-dark-700/50 transition-colors">
-                                        <td className="px-6 py-4 font-mono text-gray-400">#{sale.id_venta}</td>
-                                        <td className="px-6 py-4 text-white">
-                                            {sale.usuario?.nombre || `Usuario #${sale.id_usuario}`}
+                                    <tr key={sale.id_venta} className="hover:bg-dark-700/30 transition-colors group">
+                                        <td className="px-6 py-4 font-mono text-gray-400 text-sm">#{sale.id_venta}</td>
+                                        <td className="px-6 py-4">
+                                            <div className="font-bold text-white text-sm">{sale.usuario?.nombre || `Usuario #${sale.id_usuario}`}</div>
+                                            {sale.usuario?.email && <div className="text-xs text-gray-500">{sale.usuario.email}</div>}
                                         </td>
-                                        <td className="px-6 py-4 text-gray-400">
+                                        <td className="px-6 py-4 text-gray-300 text-sm">
                                             {formatDate(sale.fecha_venta)}
                                         </td>
-                                        <td className="px-6 py-4 text-primary-400 font-bold">
+                                        <td className="px-6 py-4 text-primary-400 font-bold font-mono">
                                             {formatCurrency(Number(sale.total))}
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className={`px-3 py-1 rounded-full text-xs font-bold border ${['completado', 'completada'].includes(sale.estado.toLowerCase()) ? 'bg-green-500/10 text-green-500 border-green-500/20' :
-                                                    sale.estado.toLowerCase() === 'pendiente' ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20' :
-                                                        'bg-red-500/10 text-red-500 border-red-500/20'
-                                                }`}>
-                                                {sale.estado.toUpperCase()}
-                                            </span>
+                                            {getStatusBadge(sale.estado)}
                                         </td>
-                                        <td className="px-6 py-4">
-                                            <button
+                                        <td className="px-6 py-4 text-right">
+                                            <Button
                                                 onClick={() => openDetailModal(sale)}
-                                                className="text-primary-400 hover:text-primary-300 font-medium transition-colors"
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-10 w-10 p-0 rounded-full text-blue-400 hover:text-white hover:bg-blue-500/20 transition-all"
+                                                title="Ver Detalles"
                                             >
-                                                Ver Detalles
-                                            </button>
+                                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                </svg>
+                                            </Button>
                                         </td>
                                     </tr>
                                 ))}
@@ -102,7 +119,7 @@ export default function SalesManagement() {
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </Card>
             )}
 
             {/* Sale Detail Modal */}

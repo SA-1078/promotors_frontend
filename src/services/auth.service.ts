@@ -10,3 +10,12 @@ export const registerApi = async (payload: RegisterPayload): Promise<AuthRespons
     const response = await api.post<{ success: boolean; data: AuthResponse }>('/auth/register', payload);
     return response.data.data;
 };
+
+export const verifyTokenApi = async (): Promise<boolean> => {
+    try {
+        await api.get('/auth/verify');
+        return true;
+    } catch {
+        return false;
+    }
+};
