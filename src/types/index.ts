@@ -68,13 +68,15 @@ export interface CreateCategoryDto {
 export interface Inventory {
     id_inventario: number;
     id_moto: number;
-    cantidad_stock: number;
-    fecha_actualizacion: string;
+    stock_actual: number;
+    ubicacion: string;
+    ultima_actualizacion: string;
     motocicleta?: Motorcycle;
 }
 
 export interface UpdateInventoryDto {
-    stock_actual: number;
+    stock_actual?: number;
+    ubicacion?: string;
 }
 
 export interface CreateInventoryDto {

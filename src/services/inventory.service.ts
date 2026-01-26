@@ -24,8 +24,9 @@ export const inventoryService = {
                 return {
                     id_inventario: inventoryItem?.id_inventario || 0,
                     id_moto: moto.id_moto,
-                    cantidad_stock: inventoryItem?.cantidad_stock ?? inventoryItem?.stock ?? inventoryItem?.stock_actual ?? 0,
-                    fecha_actualizacion: inventoryItem?.fecha_actualizacion || new Date().toISOString(),
+                    stock_actual: inventoryItem?.stock_actual ?? 0,
+                    ubicacion: inventoryItem?.ubicacion || 'Bodega Principal',
+                    ultima_actualizacion: inventoryItem?.ultima_actualizacion || new Date().toISOString(),
                     motocicleta: moto
                 };
             });

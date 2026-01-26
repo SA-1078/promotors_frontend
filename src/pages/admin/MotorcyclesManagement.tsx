@@ -5,7 +5,6 @@ import type { Motorcycle, Category, CreateMotorcycleDto } from '../../types';
 import { Card, CardHeader } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
-import { Input } from '../../components/ui/Input';
 
 export default function MotorcyclesManagement() {
     const [motorcycles, setMotorcycles] = useState<Motorcycle[]>([]);
@@ -141,10 +140,6 @@ export default function MotorcyclesManagement() {
         }
     };
 
-    const getCategoryName = (id: number) => {
-        return categories.find(c => c.id_categoria === id)?.nombre || 'N/A';
-    };
-
     return (
         <div className="p-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
@@ -194,7 +189,8 @@ export default function MotorcyclesManagement() {
                         <Badge variant="primary" size="sm">{motorcycles.length} Total</Badge>
                     </CardHeader>
 
-                    <div className="overflow-x-auto">
+                    {/* Desktop Table View */}
+                    <div className="hidden md:block overflow-x-auto">
                         <table className="w-full">
                             <thead className="bg-dark-800/80 backdrop-blur-sm border-b border-dark-700">
                                 <tr>
@@ -282,6 +278,75 @@ export default function MotorcyclesManagement() {
                                 ))}
                             </tbody>
                         </table>
+                    </div>
+
+                    {/* Mobile Card View */}
+                    <div className="md:hidden space-y-4 p-4">
+                        {motorcycles.map((moto) => (
+                            <div key={moto.id_moto} className={`rounded-xl border ${moto.deletedAt ? 'bg-red-900/5 border-red-900/20' : 'bg-dark-800/50 border-dark-700'} p-4 space-y-4`}>
+                                <div className="flex items-start gap-4">
+                                    <div className="w-20 h-20 flex-shrink-0 rounded-xl bg-dark-700 overflow-hidden border border-dark-600">
+                                        {moto.imagen_url ? (
+                                            <img src={moto.imagen_url} alt={moto.nombre} className={`w-full h-full object-cover ${moto.deletedAt ? 'grayscale opacity-60' : ''}`} />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center">
+                                                <svg className="w-8 h-8 text-dark-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <h3 className="text-white font-bold text-lg truncate">{moto.nombre}</h3>
+                                        <p className="text-gray-400 text-sm">{moto.marca} • {moto.modelo}</p>
+                                        <p className="text-gray-500 text-xs font-mono">{moto.anio}</p>
+                                    </div>
+                                    <div className="text-right">
+                                        {moto.deletedAt ? (
+                                            <Badge variant="danger" size="sm">Inactivo</Badge>
+                                        ) : (
+                                            <Badge variant="success" size="sm">Activo</Badge>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center justify-between pt-3 border-t border-dark-700">
+                                    <div>
+                                        <p className="text-xs text-gray-500 mb-1">Precio</p>
+                                        <p className="text-primary-400 font-bold text-lg">${moto.precio.toLocaleString()}</p>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        {moto.deletedAt ? (
+                                            <Button
+                                                onClick={() => handleRestore(moto)}
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-10 w-10 p-0 rounded-full text-green-400 hover:text-white hover:bg-green-500/20"
+                                                title="Restaurar"
+                                            >
+                                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                                            </Button>
+                                        ) : (
+                                            <Button
+                                                onClick={() => handleOpenEdit(moto)}
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-10 w-10 p-0 rounded-full text-blue-400 hover:text-white hover:bg-blue-500/20"
+                                            >
+                                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                            </Button>
+                                        )}
+                                        <Button
+                                            onClick={() => handleDelete(moto)}
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-10 w-10 p-0 rounded-full text-red-400 hover:text-white hover:bg-red-500/20"
+                                            title={moto.deletedAt ? "Eliminar Definitivamente" : "Inactivar"}
+                                        >
+                                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
 
                     {motorcycles.length === 0 && (

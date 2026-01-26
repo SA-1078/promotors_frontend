@@ -48,8 +48,8 @@ export default function Footer() {
                         <h4 className="font-semibold text-white mb-4">Navegación</h4>
                         <ul className="space-y-2">
                             <li>
-                                <Link 
-                                to="/" className="text-gray-400 hover:text-primary-400 transition-colors text-sm">
+                                <Link
+                                    to="/" className="text-gray-400 hover:text-primary-400 transition-colors text-sm">
                                     Inicio
                                 </Link>
                             </li>
@@ -100,7 +100,7 @@ export default function Footer() {
                 </div>
 
                 <div className="border-t border-dark-700 mt-8 pt-8 text-center text-gray-500 text-sm">
-                    <p>&copy; {currentYear} MotoRShop. Todos los derechos reservados.</p>
+                    <p>&copy; {currentYear} MotoRShop. <br></br>Todos los derechos reservados.</p>
                 </div>
             </div>
         </footer>

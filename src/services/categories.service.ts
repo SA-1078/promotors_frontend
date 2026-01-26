@@ -1,8 +1,9 @@
 import { api } from './api';
 import type { Category, CreateCategoryDto } from '../types';
 
-export const getCategories = async (): Promise<Category[]> => {
-    const response = await api.get<{ success: boolean; data: { items: Category[] } }>('/categories');
+export const getCategories = async (options?: { withDeleted?: boolean }): Promise<Category[]> => {
+    const params = options?.withDeleted ? { withDeleted: 'true' } : {};
+    const response = await api.get<{ success: boolean; data: { items: Category[] } }>('/categories', { params });
     return response.data.data.items; // Extract items from nested structure
 };
 
@@ -21,6 +22,11 @@ export const updateCategory = async (id: number, data: Partial<CreateCategoryDto
     return response.data;
 };
 
-export const deleteCategory = async (id: number): Promise<void> => {
-    await api.delete(`/categories/${id}`);
+export const deleteCategory = async (id: number, type: 'soft' | 'hard' = 'soft'): Promise<void> => {
+    await api.delete(`/categories/${id}`, { params: { type } });
+};
+
+export const restoreCategory = async (id: number): Promise<Category> => {
+    const response = await api.post<Category>(`/categories/${id}/restore`);
+    return response.data;
 };

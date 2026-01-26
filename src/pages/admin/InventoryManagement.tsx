@@ -11,19 +11,19 @@ export default function InventoryManagement() {
     const [inventory, setInventory] = useState<Inventory[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
-    const [showInactive, setShowInactive] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Inventory | null>(null);
     const [newStock, setNewStock] = useState<number>(0);
+    const [newUbicacion, setNewUbicacion] = useState<string>('');
 
     useEffect(() => {
         loadInventory();
-    }, [showInactive]);
+    }, []);
 
     const loadInventory = async () => {
         try {
             setLoading(true);
-            const data = await inventoryService.getInventory({ withDeleted: showInactive });
+            const data = await inventoryService.getInventory();
             if (Array.isArray(data)) {
                 setInventory(data);
 
@@ -44,14 +44,15 @@ export default function InventoryManagement() {
             if (selectedItem.id_inventario && selectedItem.id_inventario > 0) {
                 // Update existing inventory
                 await inventoryService.updateStock(selectedItem.id_inventario, {
-                    stock_actual: newStock
+                    stock_actual: newStock,
+                    ubicacion: newUbicacion
                 });
             } else {
                 // Create new inventory record
                 await inventoryService.createInventory({
                     id_moto: selectedItem.id_moto,
                     stock_actual: newStock,
-                    ubicacion: 'Bodega Principal'
+                    ubicacion: newUbicacion
                 });
             }
 
@@ -66,7 +67,8 @@ export default function InventoryManagement() {
 
     const openEditModal = (item: Inventory) => {
         setSelectedItem(item);
-        setNewStock(item.cantidad_stock);
+        setNewStock(item.stock_actual || 0);
+        setNewUbicacion(item.ubicacion || 'Bodega Principal');
         setIsEditModalOpen(true);
     };
 
@@ -88,16 +90,6 @@ export default function InventoryManagement() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
-                    <label className="flex items-center gap-2 cursor-pointer bg-dark-800 px-4 py-2 rounded-lg border border-dark-700 hover:border-dark-600 transition-colors">
-                        <input
-                            type="checkbox"
-                            checked={showInactive}
-                            onChange={(e) => setShowInactive(e.target.checked)}
-                            className="form-checkbox text-primary-500 rounded bg-dark-900 border-dark-600 focus:ring-primary-500 focus:ring-offset-0"
-                        />
-                        <span className="text-sm text-gray-300 font-medium select-none">Mostrar Inactivos</span>
-                    </label>
-
                     <div className="relative flex-1 md:w-64">
                         <Input
                             placeholder="Buscar..."
@@ -123,13 +115,15 @@ export default function InventoryManagement() {
                         <Badge variant="primary" size="sm">{filteredInventory.length} Items</Badge>
                     </CardHeader>
 
-                    <div className="overflow-x-auto">
+                    {/* Desktop Table View */}
+                    <div className="hidden md:block overflow-x-auto">
                         <table className="w-full text-left">
                             <thead className="bg-dark-800/80 backdrop-blur-sm border-b border-dark-700">
                                 <tr>
                                     <th className="px-6 py-4 font-bold text-xs text-primary-300 uppercase tracking-wider">Motocicleta</th>
                                     <th className="px-6 py-4 font-bold text-xs text-primary-300 uppercase tracking-wider">Precio</th>
                                     <th className="px-6 py-4 font-bold text-xs text-primary-300 uppercase tracking-wider">Stock Actual</th>
+                                    <th className="px-6 py-4 font-bold text-xs text-primary-300 uppercase tracking-wider">Ubicación</th>
                                     <th className="px-6 py-4 font-bold text-xs text-primary-300 uppercase tracking-wider">Estado</th>
                                     <th className="px-6 py-4 font-bold text-xs text-primary-300 uppercase tracking-wider text-right">Acciones</th>
                                 </tr>
@@ -178,16 +172,19 @@ export default function InventoryManagement() {
                                             {formatCurrency(Number(item.motocicleta?.precio || 0))}
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className={`font-mono font-bold text-lg ${item.cantidad_stock < 5 ? 'text-red-500' : 'text-white'}`}>
-                                                {item.cantidad_stock}
+                                            <span className={`font-mono font-bold text-lg ${item.stock_actual < 5 ? 'text-red-500' : 'text-white'}`}>
+                                                {item.stock_actual}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4">
+                                            <span className="text-gray-300 text-sm">{item.ubicacion}</span>
+                                        </td>
+                                        <td className="px-6 py-4">
                                             {item.motocicleta?.deletedAt ? (
-                                                <Badge variant="outline" className="text-gray-400 border-gray-600">Archivado</Badge>
-                                            ) : item.cantidad_stock === 0 ? (
+                                                <Badge variant="dark" size="sm">Archivado</Badge>
+                                            ) : item.stock_actual === 0 ? (
                                                 <Badge variant="danger" size="sm">Agotado</Badge>
-                                            ) : item.cantidad_stock < 5 ? (
+                                            ) : item.stock_actual < 5 ? (
                                                 <Badge variant="warning" size="sm">Bajo Stock</Badge>
                                             ) : (
                                                 <Badge variant="success" size="sm">Disponible</Badge>
@@ -245,6 +242,19 @@ export default function InventoryManagement() {
                                     value={newStock}
                                     onChange={(e) => setNewStock(parseInt(e.target.value) || 0)}
                                     className="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-500 transition-colors font-mono text-lg"
+                                />
+                            </div>
+
+                            <div className="mb-6">
+                                <label className="block text-gray-400 text-sm font-bold mb-2">
+                                    Ubicación
+                                </label>
+                                <input
+                                    type="text"
+                                    value={newUbicacion}
+                                    onChange={(e) => setNewUbicacion(e.target.value)}
+                                    placeholder="Ej: Bodega Principal, Sucursal A"
+                                    className="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-500 transition-colors"
                                 />
                             </div>
 

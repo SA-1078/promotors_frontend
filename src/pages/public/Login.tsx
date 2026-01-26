@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Button } from '../../components/ui/Button';
@@ -29,22 +29,22 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-[calc(100vh-200px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-dark-900">
+        <div className="min-h-[calc(100vh-200px)] flex items-center justify-center py-6 sm:py-12 px-4 sm:px-6 lg:px-8 bg-dark-900">
             <div className="max-w-md w-full">
-                <Card variant="glass" className="p-8 border-primary-500/20 shadow-2xl shadow-primary-900/10">
+                <Card variant="glass" className="p-6 sm:p-8 border-primary-500/20 shadow-2xl shadow-primary-900/10">
                     {/* Header */}
-                    <div className="text-center mb-10">
+                    <div className="text-center mb-6 sm:mb-10">
                         <div className="w-16 h-16 bg-gradient-to-br from-primary-600 to-accent-orange rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary-500/20 transform rotate-3">
                             <span className="text-white font-display font-bold text-3xl">M</span>
                         </div>
-                        <h2 className="text-3xl font-display font-bold gradient-text mb-2">
+                        <h2 className="text-2xl sm:text-3xl font-display font-bold gradient-text mb-2">
                             Iniciar Sesión
                         </h2>
-                        <p className="text-gray-400">Bienvenido de nuevo a MotoRShop</p>
+                        <p className="text-gray-400 text-sm sm:text-base">Bienvenido de nuevo a MotoRShop</p>
                     </div>
 
                     {/* Form */}
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                         {error && (
                             <div className="bg-accent-red/10 border border-accent-red/20 text-accent-red px-4 py-3 rounded-lg text-sm flex items-center gap-2">
                                 <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -81,6 +81,15 @@ export default function Login() {
                                 </svg>
                             }
                         />
+
+                        <div className="text-right">
+                            <Link
+                                to="/forgot-password"
+                                className="text-sm text-primary-400 hover:text-primary-300 transition-colors hover:underline"
+                            >
+                                ¿Olvidaste tu contraseña?
+                            </Link>
+                        </div>
 
                         <Button
                             type="submit"

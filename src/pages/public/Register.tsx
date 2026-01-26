@@ -1,9 +1,10 @@
-import { useState, FormEvent } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card } from '../../components/ui/Card';
+import { api } from '../../services/api';
 
 export default function Register() {
     const [nombre, setNombre] = useState('');
@@ -13,8 +14,27 @@ export default function Register() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    // Bootstrap first admin - show special fields until there's an admin
+    const [needsAdmin, setNeedsAdmin] = useState(false);
+    const [rol, setRol] = useState('cliente');
+    const [codigoSecreto, setCodigoSecreto] = useState('');
+
     const navigate = useNavigate();
     const { register } = useAuth();
+
+    useEffect(() => {
+        checkIfNeedsAdmin();
+    }, []);
+
+    const checkIfNeedsAdmin = async () => {
+        try {
+            const response = await api.get<{ success: boolean; data: { hasAdmin: boolean } }>('/users/has-admin');
+            setNeedsAdmin(!response.data.data.hasAdmin);
+        } catch (err) {
+            setNeedsAdmin(false);
+        }
+    };
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -28,7 +48,15 @@ export default function Register() {
         setLoading(true);
 
         try {
-            await register({ nombre, email, telefono, password });
+            const payload: any = { nombre, email, telefono, password };
+
+            // If no admin exists yet, include role and secret code
+            if (needsAdmin && (rol === 'admin' || rol === 'empleado')) {
+                payload.rol = rol;
+                payload.codigo_secreto = codigoSecreto;
+            }
+
+            await register(payload);
             navigate('/');
         } catch (err: any) {
             setError(err.response?.data?.message || 'Error al registrarse');
@@ -38,19 +66,19 @@ export default function Register() {
     };
 
     return (
-        <div className="min-h-[calc(100vh-200px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-dark-900">
+        <div className="min-h-[calc(100vh-200px)] flex items-center justify-center py-6 sm:py-12 px-4 sm:px-6 lg:px-8 bg-dark-900">
             <div className="max-w-md w-full">
-                <Card variant="glass" className="p-8 border-primary-500/20 shadow-2xl shadow-primary-900/10">
+                <Card variant="glass" className="p-6 sm:p-8 border-primary-500/20 shadow-2xl shadow-primary-900/10">
                     {/* Header */}
-                    <div className="text-center mb-8">
-                        <h2 className="text-3xl font-display font-bold gradient-text mb-2">
+                    <div className="text-center mb-6 sm:mb-8">
+                        <h2 className="text-2xl sm:text-3xl font-display font-bold gradient-text mb-2">
                             Crear Cuenta
                         </h2>
-                        <p className="text-gray-400">Únete a la comunidad de MotoRShop</p>
+                        <p className="text-gray-400 text-sm sm:text-base">Únete a la comunidad de MotoRShop</p>
                     </div>
 
                     {/* Form */}
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                         {error && (
                             <div className="bg-accent-red/10 border border-accent-red/20 text-accent-red px-4 py-3 rounded-lg text-sm flex items-center gap-2">
                                 <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -129,11 +157,51 @@ export default function Register() {
                             placeholder="••••••••"
                             minLength={6}
                             icon={
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                </svg>
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                             }
                         />
+
+                        {/* Admin Setup - Show until there's at least one admin */}
+                        {needsAdmin && (
+                            <div className="pt-4 border-t border-primary-500/20">
+                                <div className="mb-4 p-3 bg-primary-500/10 border border-primary-500/30 rounded-lg">
+                                    <p className="text-sm text-primary-400 flex items-center gap-2">
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                        No hay administrador - Configura la primera cuenta de administrador
+                                    </p>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-300 mb-2">Rol del Usuario</label>
+                                        <select
+                                            value={rol}
+                                            onChange={(e) => setRol(e.target.value)}
+                                            className="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                                            required
+                                        >
+                                            <option value="cliente">Cliente</option>
+                                            <option value="empleado">Empleado</option>
+                                            <option value="admin">Administrador</option>
+                                        </select>
+                                    </div>
+
+                                    {(rol === 'admin' || rol === 'empleado') && (
+                                        <Input
+                                            label="Código Secreto"
+                                            type="text"
+                                            value={codigoSecreto}
+                                            onChange={(e) => setCodigoSecreto(e.target.value)}
+                                            placeholder="Código de autorización"
+                                            required
+                                            icon={
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
+                                            }
+                                        />
+                                    )}
+                                </div>
+                            </div>
+                        )}
 
                         <Button
                             type="submit"

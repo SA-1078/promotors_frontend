@@ -78,7 +78,8 @@ export default function SystemLogs() {
                         <Badge variant="primary" size="sm">{logs.length} Eventos</Badge>
                     </CardHeader>
 
-                    <div className="overflow-x-auto">
+                    {/* Desktop Table View */}
+                    <div className="hidden md:block overflow-x-auto">
                         <table className="w-full text-left">
                             <thead className="bg-dark-800/80 backdrop-blur-sm border-b border-dark-700">
                                 <tr>
@@ -137,6 +138,54 @@ export default function SystemLogs() {
                                 )}
                             </tbody>
                         </table>
+                    </div>
+
+                    {/* Mobile Card View */}
+                    <div className="md:hidden space-y-3 p-4">
+                        {logs.map((log) => {
+                            const user = log.usuario_id ? users[log.usuario_id] : null;
+                            return (
+                                <div key={log._id || Math.random()} className="bg-dark-800/50 rounded-xl border border-dark-700 p-4 space-y-3">
+                                    <div className="flex items-start justify-between">
+                                        <div className="flex-1 min-w-0">
+                                            {getActionBadge(log.accion)}
+                                            <p className="text-gray-400 text-xs font-mono mt-2">
+                                                {log.fecha ? new Date(log.fecha).toLocaleString('es-GB', {
+                                                    day: '2-digit',
+                                                    month: '2-digit',
+                                                    year: 'numeric',
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                }) : 'N/A'}
+                                            </p>
+                                        </div>
+                                        <Button
+                                            onClick={() => setSelectedLog(log)}
+                                            variant="secondary"
+                                            size="sm"
+                                            className="bg-dark-700/50 hover:bg-primary-600/20 text-gray-400 hover:text-primary-400 border-dark-600"
+                                        >
+                                            Ver
+                                        </Button>
+                                    </div>
+                                    <div className="pt-2 border-t border-dark-700/50">
+                                        {user ? (
+                                            <div>
+                                                <p className="text-white font-bold text-sm">{user.nombre}</p>
+                                                <p className="text-gray-500 text-xs">{user.email}</p>
+                                            </div>
+                                        ) : (
+                                            <p className="text-gray-500 text-sm italic">User #{log.usuario_id || '?'}</p>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                        {logs.length === 0 && (
+                            <div className="text-center py-12 text-gray-500">
+                                No hay registros de sistema.
+                            </div>
+                        )}
                     </div>
                 </Card>
             )}

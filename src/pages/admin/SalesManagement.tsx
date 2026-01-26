@@ -64,7 +64,8 @@ export default function SalesManagement() {
                         <Badge variant="primary" size="sm">{sales.length} Registros</Badge>
                     </CardHeader>
 
-                    <div className="overflow-x-auto">
+                    {/* Desktop Table View */}
+                    <div className="hidden md:block overflow-x-auto">
                         <table className="w-full text-left">
                             <thead className="bg-dark-800/80 backdrop-blur-sm border-b border-dark-700">
                                 <tr>
@@ -118,6 +119,47 @@ export default function SalesManagement() {
                                 )}
                             </tbody>
                         </table>
+                    </div>
+
+                    {/* Mobile Card View */}
+                    <div className="md:hidden space-y-3 p-4">
+                        {sales.map((sale) => (
+                            <div key={sale.id_venta} className="bg-dark-800/50 rounded-xl border border-dark-700 p-4 space-y-3">
+                                <div className="flex items-start justify-between">
+                                    <div>
+                                        <p className="text-gray-500 text-xs font-mono">#{sale.id_venta}</p>
+                                        <p className="text-white font-bold text-sm mt-1">{sale.usuario?.nombre || `Usuario #${sale.id_usuario}`}</p>
+                                        {sale.usuario?.email && <p className="text-gray-500 text-xs">{sale.usuario.email}</p>}
+                                    </div>
+                                    {getStatusBadge(sale.estado)}
+                                </div>
+
+                                <div className="flex items-center justify-between pt-3 border-t border-dark-700">
+                                    <div>
+                                        <p className="text-gray-500 text-xs">Total</p>
+                                        <p className="text-primary-400 font-bold font-mono text-lg">{formatCurrency(Number(sale.total))}</p>
+                                        <p className="text-gray-500 text-xs mt-1">{formatDate(sale.fecha_venta)}</p>
+                                    </div>
+                                    <Button
+                                        onClick={() => openDetailModal(sale)}
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-10 w-10 p-0 rounded-full text-blue-400 hover:text-white hover:bg-blue-500/20"
+                                        title="Ver Detalles"
+                                    >
+                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        </svg>
+                                    </Button>
+                                </div>
+                            </div>
+                        ))}
+                        {sales.length === 0 && (
+                            <div className="text-center py-12 text-gray-500">
+                                No hay ventas registradas.
+                            </div>
+                        )}
                     </div>
                 </Card>
             )}

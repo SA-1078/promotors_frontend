@@ -6,7 +6,7 @@ export default function Home() {
     return (
         <div>
             {/* Hero Section */}
-            <section className="relative h-[700px] flex items-center justify-center overflow-hidden bg-dark-900">
+            <section className="relative h-[500px] md:h-[700px] flex items-center justify-center overflow-hidden bg-dark-900">
                 {/* Background Image with Overlay */}
                 <div className="absolute inset-0 z-0">
                     <div className="absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/80 to-transparent z-10"></div>
@@ -14,16 +14,16 @@ export default function Home() {
                 </div>
 
                 <div className="relative z-20 text-center px-4 max-w-5xl mx-auto">
-                    <div className="inline-block px-4 py-1.5 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 font-medium text-sm mb-6 backdrop-blur-sm animate-fade-in">
+                    <div className="inline-block px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 font-medium text-xs sm:text-sm mb-4 sm:mb-6 backdrop-blur-sm animate-fade-in">
                         🚀 La experiencia definitiva en dos ruedas
                     </div>
 
-                    <h1 className="text-6xl md:text-8xl font-display font-bold mb-8 animate-slide-up leading-tight">
+                    <h1 className="text-4xl sm:text-6xl md:text-8xl font-display font-bold mb-4 sm:mb-8 animate-slide-up leading-tight">
                         Encuentra Tu <br />
                         <span className="gradient-text">Motocicleta Ideal</span>
                     </h1>
 
-                    <p className="text-xl md:text-2xl text-gray-300 mb-10 max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: '0.1s' }}>
+                    <p className="text-base sm:text-xl md:text-2xl text-gray-300 mb-6 sm:mb-10 max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: '0.1s' }}>
                         Las mejores motocicletas al mejor precio. Calidad garantizada y servicio excepcional para tu próxima aventura.
                     </p>
 
@@ -41,16 +41,16 @@ export default function Home() {
             </section>
 
             {/* Features Section */}
-            <section className="py-24 bg-dark-900 relative">
+            <section className="py-12 sm:py-24 bg-dark-900 relative">
                 {/* Decorative Elements */}
                 <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-dark-700 to-transparent"></div>
 
                 <div className="container-custom">
-                    <div className="text-center mb-16">
-                        <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
+                    <div className="text-center mb-10 sm:mb-16">
+                        <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-3 sm:mb-4">
                             ¿Por Qué Elegir <span className="gradient-text">MotoRShop</span>?
                         </h2>
-                        <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+                        <p className="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto">
                             Nos apasionan las motos tanto como a ti. Ofrecemos una experiencia de compra transparente y premium.
                         </p>
                     </div>

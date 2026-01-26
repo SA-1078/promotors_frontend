@@ -80,7 +80,8 @@ export default function CommentsManagement() {
                         <Badge variant="primary" size="sm">{comments.length} Opiniones</Badge>
                     </CardHeader>
 
-                    <div className="overflow-x-auto">
+                    {/* Desktop Table View */}
+                    <div className="hidden md:block overflow-x-auto">
                         <table className="w-full text-left">
                             <thead className="bg-dark-800/80 backdrop-blur-sm border-b border-dark-700">
                                 <tr>
@@ -142,6 +143,51 @@ export default function CommentsManagement() {
                                 )}
                             </tbody>
                         </table>
+                    </div>
+
+                    {/* Mobile Card View */}
+                    <div className="md:hidden space-y-4 p-4">
+                        {comments.map((comment) => {
+                            const user = users[comment.usuario_id];
+                            const moto = motorcycles[comment.motocicleta_id];
+
+                            return (
+                                <div key={comment._id} className="bg-dark-800/50 rounded-xl border border-dark-700 p-4 space-y-3">
+                                    <div className="flex items-start justify-between">
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-white font-bold">{user ? user.nombre : `User #${comment.usuario_id}`}</p>
+                                            <p className="text-primary-400 text-sm truncate">{moto ? `${moto.marca} ${moto.modelo}` : `Moto #${comment.motocicleta_id}`}</p>
+                                        </div>
+                                        <div className="flex text-yellow-500 text-lg">
+                                            {'★'.repeat(comment.calificacion)}
+                                            <span className="text-dark-600">{'★'.repeat(5 - comment.calificacion)}</span>
+                                        </div>
+                                    </div>
+                                    <div className="pt-3 border-t border-dark-700">
+                                        <p className="text-gray-300 text-sm italic">"{comment.comentario}"</p>
+                                    </div>
+                                    <div className="flex items-center justify-between pt-3 border-t border-dark-700">
+                                        <p className="text-xs text-gray-500">{new Date(comment.fecha).toLocaleDateString()}</p>
+                                        <Button
+                                            onClick={() => handleDelete(comment._id)}
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-10 w-10 p-0 rounded-full text-red-400 hover:text-white hover:bg-red-500/20"
+                                            title="Eliminar"
+                                        >
+                                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </Button>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                        {comments.length === 0 && (
+                            <div className="text-center py-12 text-gray-500">
+                                No hay comentarios registrados.
+                            </div>
+                        )}
                     </div>
                 </Card>
             )}

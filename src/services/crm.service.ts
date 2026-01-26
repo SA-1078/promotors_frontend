@@ -21,5 +21,15 @@ export const crmService = {
     getLeads: async () => {
         const response = await api.get('/crm?limit=50');
         return response.data;
+    },
+
+    updateLead: async (id: number, data: Partial<CreateLeadDto>) => {
+        const response = await api.put<{ success: boolean; data: Lead }>(`/crm/${id}`, data);
+        return response.data;
+    },
+
+    deleteLead: async (id: number) => {
+        const response = await api.delete<{ success: boolean }>(`/crm/${id}`);
+        return response.data;
     }
 };

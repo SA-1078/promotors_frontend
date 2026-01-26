@@ -40,7 +40,7 @@ export default function Navbar() {
                     </div>
 
                     {/* User Actions */}
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-2 sm:space-x-4">
                         {user ? (
                             <>
                                 {/* Shopping Cart Button */}
@@ -58,47 +58,48 @@ export default function Navbar() {
                                     )}
                                 </button>
 
-                                {/* Panel Button - Show for all logged users */}
+                                {/* Panel Button - Responsive */}
                                 <Link
                                     to="/admin"
-                                    className="bg-yellow-500 hover:bg-yellow-600 text-dark-900 px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
+                                    className="bg-yellow-500 hover:bg-yellow-600 text-dark-900 px-2 sm:px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-1 sm:gap-2"
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                                     </svg>
-                                    Mi Panel
+                                    <span className="hidden sm:inline">Mi Panel</span>
                                 </Link>
 
-                                {/* User Info Display */}
-                                <div className="bg-dark-700 px-4 py-2 rounded-lg">
+                                {/* User Info Display - Hidden on mobile */}
+                                <div className="hidden lg:block bg-dark-700 px-4 py-2 rounded-lg">
                                     <p className="text-sm text-white">
                                         Hola, <span className="font-semibold">{user.nombre}</span>
                                     </p>
                                     <p className="text-xs text-gray-400 capitalize">{user.rol}</p>
                                 </div>
 
-                                {/* Logout Button */}
+                                {/* Logout Button - Icon only on mobile */}
                                 <button
                                     onClick={handleLogout}
-                                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
+                                    className="bg-red-600 hover:bg-red-700 text-white px-2 sm:px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-1 sm:gap-2"
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                                     </svg>
-                                    Salir
+                                    <span className="hidden sm:inline">Salir</span>
                                 </button>
                             </>
                         ) : (
                             <>
                                 <Link
                                     to="/login"
-                                    className="text-gray-300 hover:text-primary-400 transition-colors px-4 py-2"
+                                    className="text-gray-300 hover:text-primary-400 transition-colors px-2 sm:px-4 py-2 text-sm sm:text-base"
                                 >
-                                    Iniciar Sesión
+                                    <span className="hidden sm:inline">Iniciar Sesión</span>
+                                    <span className="sm:hidden">Entrar</span>
                                 </Link>
                                 <Link
                                     to="/register"
-                                    className="btn-primary"
+                                    className="btn-primary text-sm sm:text-base px-3 sm:px-6"
                                 >
                                     Registrarse
                                 </Link>
