@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams, useNavigate, Link } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { paypalService } from '../../services/paypal.service';
 import { useCart } from '../../context/CartContext';
 
 export default function PaymentSuccess() {
     const [searchParams] = useSearchParams();
-    const navigated = useNavigate();
     const { clearCart } = useCart();
 
     const token = searchParams.get('token'); // PayPal Order ID

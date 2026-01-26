@@ -1,5 +1,5 @@
 import { api } from './api';
-import type { CartItem, Sale } from '../types';
+import type { CartItem } from '../types';
 
 export const paypalService = {
     /**

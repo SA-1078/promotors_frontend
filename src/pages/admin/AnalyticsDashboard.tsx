@@ -112,7 +112,7 @@ export default function AnalyticsDashboard() {
                                     }}
                                 />
                                 <Bar dataKey="count" name="Vistas" radius={[0, 4, 4, 0]}>
-                                    {topViews.map((entry, index) => (
+                                    {topViews.map((_, index) => (
                                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                     ))}
                                 </Bar>
