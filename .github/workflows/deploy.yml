@@ -46,18 +46,11 @@ jobs:
           script: |
             set -e
 
-            # Create web root if it doesn't exist
             mkdir -p /var/www/react-app
-            
-            # Clean old files (caution: this removes everything in the folder)
             rm -rf /var/www/react-app/*
-            
-            # Move new files
             cp -r /tmp/react_build/dist/* /var/www/react-app/
-            
-            # Fix permissions (assuming standard www-data usage for Nginx)
+
             chown -R www-data:www-data /var/www/react-app
-            
-            # Restart Nginx to ensure everything is fresh (reload is usually enough but verify config first)
+
             nginx -t
             systemctl reload nginx
