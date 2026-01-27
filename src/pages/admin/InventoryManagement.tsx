@@ -78,7 +78,7 @@ export default function InventoryManagement() {
     );
 
     return (
-        <div className="p-6">
+        <div className="p-3 sm:p-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
                     <h1 className="text-3xl font-display font-bold gradient-text mb-2 animate-fade-in">

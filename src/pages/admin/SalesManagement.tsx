@@ -11,6 +11,9 @@ export default function SalesManagement() {
     const [loading, setLoading] = useState(true);
     const [selectedSale, setSelectedSale] = useState<Sale | null>(null);
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [editStatus, setEditStatus] = useState('');
 
     useEffect(() => {
         loadSales();
@@ -35,6 +38,39 @@ export default function SalesManagement() {
         setIsDetailModalOpen(true);
     };
 
+    const openEditModal = (sale: Sale) => {
+        setSelectedSale(sale);
+        setEditStatus(sale.estado);
+        setIsEditModalOpen(true);
+    };
+
+    const openDeleteModal = (sale: Sale) => {
+        setSelectedSale(sale);
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleUpdateStatus = async () => {
+        if (!selectedSale) return;
+        try {
+            await salesService.updateSaleStatus(selectedSale.id_venta, editStatus);
+            setIsEditModalOpen(false);
+            loadSales();
+        } catch (error) {
+            console.error('Error updating sale status:', error);
+        }
+    };
+
+    const handleDelete = async () => {
+        if (!selectedSale) return;
+        try {
+            await salesService.delete(selectedSale.id_venta);
+            setIsDeleteModalOpen(false);
+            loadSales();
+        } catch (error) {
+            console.error('Error deleting sale:', error);
+        }
+    };
+
     const getStatusBadge = (status: string) => {
         const s = status.toLowerCase();
         if (['completado', 'completada'].includes(s)) return <Badge variant="success" size="sm">COMPLETADO</Badge>;
@@ -43,7 +79,7 @@ export default function SalesManagement() {
     };
 
     return (
-        <div className="p-6">
+        <div className="p-3 sm:p-6">
             <div className="mb-8">
                 <h1 className="text-3xl font-display font-bold gradient-text mb-2 animate-fade-in">
                     Gestión de Ventas
@@ -95,18 +131,42 @@ export default function SalesManagement() {
                                             {getStatusBadge(sale.estado)}
                                         </td>
                                         <td className="px-6 py-4 text-right">
-                                            <Button
-                                                onClick={() => openDetailModal(sale)}
-                                                variant="ghost"
-                                                size="sm"
-                                                className="h-10 w-10 p-0 rounded-full text-blue-400 hover:text-white hover:bg-blue-500/20 transition-all"
-                                                title="Ver Detalles"
-                                            >
-                                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                                </svg>
-                                            </Button>
+                                            <div className="flex items-center justify-end gap-2">
+                                                <Button
+                                                    onClick={() => openDetailModal(sale)}
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="h-10 w-10 p-0 rounded-full text-blue-400 hover:text-white hover:bg-blue-500/20 transition-all"
+                                                    title="Ver Detalles"
+                                                >
+                                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                    </svg>
+                                                </Button>
+                                                <Button
+                                                    onClick={() => openEditModal(sale)}
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="h-10 w-10 p-0 rounded-full text-yellow-400 hover:text-white hover:bg-yellow-500/20 transition-all"
+                                                    title="Editar Estado"
+                                                >
+                                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                    </svg>
+                                                </Button>
+                                                <Button
+                                                    onClick={() => openDeleteModal(sale)}
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="h-10 w-10 p-0 rounded-full text-red-400 hover:text-white hover:bg-red-500/20 transition-all"
+                                                    title="Eliminar Venta"
+                                                >
+                                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                </Button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
@@ -124,32 +184,60 @@ export default function SalesManagement() {
                     {/* Mobile Card View */}
                     <div className="md:hidden space-y-3 p-4">
                         {sales.map((sale) => (
-                            <div key={sale.id_venta} className="bg-dark-800/50 rounded-xl border border-dark-700 p-4 space-y-3">
+                            <div key={sale.id_venta} className="bg-dark-800/50 rounded-xl border border-dark-700 p-3 space-y-3">
+                                {/* Header: ID y Estado */}
                                 <div className="flex items-start justify-between">
-                                    <div>
-                                        <p className="text-gray-500 text-xs font-mono">#{sale.id_venta}</p>
-                                        <p className="text-white font-bold text-sm mt-1">{sale.usuario?.nombre || `Usuario #${sale.id_usuario}`}</p>
-                                        {sale.usuario?.email && <p className="text-gray-500 text-xs">{sale.usuario.email}</p>}
-                                    </div>
+                                    <p className="text-gray-500 text-xs font-mono">#{sale.id_venta}</p>
                                     {getStatusBadge(sale.estado)}
                                 </div>
 
-                                <div className="flex items-center justify-between pt-3 border-t border-dark-700">
-                                    <div>
-                                        <p className="text-gray-500 text-xs">Total</p>
-                                        <p className="text-primary-400 font-bold font-mono text-lg">{formatCurrency(Number(sale.total))}</p>
-                                        <p className="text-gray-500 text-xs mt-1">{formatDate(sale.fecha_venta)}</p>
-                                    </div>
+                                {/* Cliente */}
+                                <div>
+                                    <p className="text-white font-bold text-lg">{sale.usuario?.nombre || `Usuario #${sale.id_usuario}`}</p>
+                                    {sale.usuario?.email && <p className="text-gray-500 text-xs mt-0.5">{sale.usuario.email}</p>}
+                                </div>
+
+                                {/* Total y Fecha */}
+                                <div className="pt-2 border-t border-dark-700">
+                                    <p className="text-gray-500 text-xs mb-1">Total</p>
+                                    <p className="text-primary-400 font-bold font-mono text-xl">{formatCurrency(Number(sale.total))}</p>
+                                    <p className="text-gray-500 text-xs mt-1.5">{formatDate(sale.fecha_venta)}</p>
+                                </div>
+
+                                {/* Acciones */}
+                                <div className="flex items-center justify-end gap-2 pt-2 border-t border-dark-700">
                                     <Button
                                         onClick={() => openDetailModal(sale)}
                                         variant="ghost"
                                         size="sm"
-                                        className="h-10 w-10 p-0 rounded-full text-blue-400 hover:text-white hover:bg-blue-500/20"
+                                        className="h-9 w-9 p-0 rounded-full text-blue-400 hover:text-white hover:bg-blue-500/20"
                                         title="Ver Detalles"
                                     >
-                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        </svg>
+                                    </Button>
+                                    <Button
+                                        onClick={() => openEditModal(sale)}
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-9 w-9 p-0 rounded-full text-yellow-400 hover:text-white hover:bg-yellow-500/20"
+                                        title="Editar Estado"
+                                    >
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                        </svg>
+                                    </Button>
+                                    <Button
+                                        onClick={() => openDeleteModal(sale)}
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-9 w-9 p-0 rounded-full text-red-400 hover:text-white hover:bg-red-500/20"
+                                        title="Eliminar Venta"
+                                    >
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                         </svg>
                                     </Button>
                                 </div>
@@ -232,6 +320,115 @@ export default function SalesManagement() {
                                 <p className="text-gray-400 mb-1">Total Pagado</p>
                                 <p className="text-3xl font-display font-bold text-primary-400">{formatCurrency(Number(selectedSale.total))}</p>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Edit Status Modal */}
+            {isEditModalOpen && selectedSale && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div
+                        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                        onClick={() => setIsEditModalOpen(false)}
+                    />
+                    <div className="relative bg-dark-800 rounded-2xl p-6 max-w-md w-full shadow-2xl border border-dark-700 animate-scale-in">
+                        <div className="flex justify-between items-start mb-6">
+                            <div>
+                                <h2 className="text-xl font-bold text-white">Editar Estado</h2>
+                                <p className="text-gray-400 text-sm mt-1">Venta #{selectedSale.id_venta}</p>
+                            </div>
+                            <button
+                                onClick={() => setIsEditModalOpen(false)}
+                                className="text-gray-400 hover:text-white transition-colors"
+                            >
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div className="mb-6">
+                            <label className="block text-sm font-medium text-gray-300 mb-2">
+                                Estado de la Venta
+                            </label>
+                            <select
+                                value={editStatus}
+                                onChange={(e) => setEditStatus(e.target.value)}
+                                className="w-full px-4 py-3 bg-dark-900 border border-dark-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                            >
+                                <option value="pendiente">Pendiente</option>
+                                <option value="completada">Completada</option>
+                                <option value="cancelada">Cancelada</option>
+                            </select>
+                        </div>
+
+                        <div className="flex gap-3">
+                            <Button
+                                onClick={() => setIsEditModalOpen(false)}
+                                variant="secondary"
+                                className="flex-1"
+                            >
+                                Cancelar
+                            </Button>
+                            <Button
+                                onClick={handleUpdateStatus}
+                                variant="primary"
+                                className="flex-1"
+                            >
+                                Guardar
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {isDeleteModalOpen && selectedSale && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div
+                        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                        onClick={() => setIsDeleteModalOpen(false)}
+                    />
+                    <div className="relative bg-dark-800 rounded-2xl p-6 max-w-md w-full shadow-2xl border border-dark-700 animate-scale-in">
+                        <div className="flex justify-between items-start mb-6">
+                            <div>
+                                <h2 className="text-xl font-bold text-white">Confirmar Eliminación</h2>
+                                <p className="text-gray-400 text-sm mt-1">Esta acción no se puede deshacer</p>
+                            </div>
+                            <button
+                                onClick={() => setIsDeleteModalOpen(false)}
+                                className="text-gray-400 hover:text-white transition-colors"
+                            >
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 mb-6">
+                            <p className="text-white font-medium mb-2">
+                                ¿Estás seguro de eliminar esta venta?
+                            </p>
+                            <p className="text-gray-400 text-sm">
+                                Venta #{selectedSale.id_venta} - {formatCurrency(Number(selectedSale.total))}
+                            </p>
+                        </div>
+
+                        <div className="flex gap-3">
+                            <Button
+                                onClick={() => setIsDeleteModalOpen(false)}
+                                variant="secondary"
+                                className="flex-1"
+                            >
+                                Cancelar
+                            </Button>
+                            <Button
+                                onClick={handleDelete}
+                                className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                            >
+                                Eliminar
+                            </Button>
                         </div>
                     </div>
                 </div>

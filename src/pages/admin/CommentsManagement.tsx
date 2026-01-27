@@ -12,6 +12,9 @@ export default function CommentsManagement() {
     const [users, setUsers] = useState<Record<number, User>>({});
     const [motorcycles, setMotorcycles] = useState<Record<number, Motorcycle>>({});
     const [loading, setLoading] = useState(true);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editingComment, setEditingComment] = useState<Comment | null>(null);
+    const [editFormData, setEditFormData] = useState({ comentario: '', calificacion: 5 });
 
     useEffect(() => {
         loadData();
@@ -58,11 +61,32 @@ export default function CommentsManagement() {
         }
     };
 
+    const handleEdit = (comment: Comment) => {
+        setEditingComment(comment);
+        setEditFormData({
+            comentario: comment.comentario,
+            calificacion: comment.calificacion
+        });
+        setIsEditModalOpen(true);
+    };
+
+    const handleUpdate = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!editingComment) return;
+        try {
+            await commentsService.update(editingComment._id, editFormData);
+            setIsEditModalOpen(false);
+            loadData();
+        } catch (error) {
+            console.error('Error updating comment', error);
+        }
+    };
+
     return (
-        <div className="p-6">
+        <div className="p-3 sm:p-6">
             <div className="mb-8">
                 <h1 className="text-3xl font-display font-bold gradient-text mb-2 animate-fade-in">
-                    Gestión de Comentarios
+                    Reseñas de Productos
                 </h1>
                 <p className="text-gray-400">
                     Modera las opiniones de los usuarios.
@@ -119,17 +143,30 @@ export default function CommentsManagement() {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 text-right">
-                                                <Button
-                                                    onClick={() => handleDelete(comment._id)}
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    className="h-10 w-10 p-0 rounded-full text-red-400 hover:text-white hover:bg-red-500/20 transition-all"
-                                                    title="Eliminar Comentario"
-                                                >
-                                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                    </svg>
-                                                </Button>
+                                                <div className="flex gap-2 justify-end">
+                                                    <Button
+                                                        onClick={() => handleEdit(comment)}
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="h-10 w-10 p-0 rounded-full text-blue-400 hover:text-white hover:bg-blue-500/20 transition-all"
+                                                        title="Editar Comentario"
+                                                    >
+                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                        </svg>
+                                                    </Button>
+                                                    <Button
+                                                        onClick={() => handleDelete(comment._id)}
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="h-10 w-10 p-0 rounded-full text-red-400 hover:text-white hover:bg-red-500/20 transition-all"
+                                                        title="Eliminar Comentario"
+                                                    >
+                                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg>
+                                                    </Button>
+                                                </div>
                                             </td>
                                         </tr>
                                     );
@@ -190,6 +227,67 @@ export default function CommentsManagement() {
                         )}
                     </div>
                 </Card>
+            )}
+
+            {/* Edit Modal */}
+            {isEditModalOpen && editingComment && (
+                <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-dark-800 rounded-xl border border-dark-700 max-w-md w-full p-6">
+                        <h3 className="text-xl font-bold text-white mb-4">Editar Reseña</h3>
+                        <form onSubmit={handleUpdate}>
+                            <div className="mb-4">
+                                <label className="block text-gray-300 mb-2">Calificación</label>
+                                <div className="flex gap-1">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <button
+                                            key={star}
+                                            type="button"
+                                            onClick={() => setEditFormData({ ...editFormData, calificacion: star })}
+                                            className="cursor-pointer hover:scale-110 transition-transform"
+                                        >
+                                            <svg
+                                                className={`w-6 h-6 ${star <= editFormData.calificacion ? 'text-yellow-400 fill-current' : 'text-gray-600'}`}
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                                                />
+                                            </svg>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-300 mb-2">Comentario</label>
+                                <textarea
+                                    value={editFormData.comentario}
+                                    onChange={(e) => setEditFormData({ ...editFormData, comentario: e.target.value })}
+                                    className="w-full px-4 py-3 bg-dark-700 border border-dark-600 rounded-lg text-white focus:outline-none focus:border-primary-500"
+                                    rows={4}
+                                    required
+                                />
+                            </div>
+                            <div className="flex gap-3">
+                                <Button type="submit" variant="primary" className="flex-1">
+                                    Guardar
+                                </Button>
+                                <Button
+                                    type="button"
+                                    onClick={() => setIsEditModalOpen(false)}
+                                    variant="ghost"
+                                    className="flex-1"
+                                >
+                                    Cancelar
+                                </Button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             )}
         </div>
     );

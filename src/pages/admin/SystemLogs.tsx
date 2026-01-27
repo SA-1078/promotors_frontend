@@ -57,7 +57,7 @@ export default function SystemLogs() {
     };
 
     return (
-        <div className="p-6">
+        <div className="p-3 sm:p-6">
             <div className="mb-8">
                 <h1 className="text-3xl font-display font-bold gradient-text mb-2 animate-fade-in">
                     Logs del Sistema

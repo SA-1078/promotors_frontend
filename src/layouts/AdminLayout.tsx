@@ -34,7 +34,7 @@ export default function AdminLayout() {
                         <div className="w-8 h-8 bg-gradient-to-br from-primary-600 to-accent-orange rounded-lg flex items-center justify-center">
                             <span className="text-white font-bold text-lg">M</span>
                         </div>
-                        <span className="text-xl font-display font-bold gradient-text hidden sm:block">
+                        <span className="text-lg sm:text-xl font-display font-bold gradient-text">
                             MotoRShop
                         </span>
                     </Link>
@@ -82,7 +82,7 @@ export default function AdminLayout() {
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                         </svg>
-                        Mensajes
+                        Contactos
                     </Link>
                 </div>
 
@@ -155,42 +155,6 @@ export default function AdminLayout() {
                                 </svg>
                                 Dashboard
                             </Link>
-                        </div>
-
-                        <div className="space-y-1 mt-6">
-                            <p className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Administración</p>
-
-                            <Link
-                                to="/admin/users"
-                                onClick={() => setIsSidebarOpen(false)}
-                                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${isActive('/admin/users')}`}
-                            >
-                                <svg className="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                                </svg>
-                                Usuarios
-                            </Link>
-                            <Link
-                                to="/admin/motorcycles"
-                                onClick={() => setIsSidebarOpen(false)}
-                                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${isActive('/admin/motorcycles')}`}
-                            >
-                                <svg className="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                </svg>
-                                Motocicletas
-                            </Link>
-
-                            <Link
-                                to="/admin/categories"
-                                onClick={() => setIsSidebarOpen(false)}
-                                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${isActive('/admin/categories')}`}
-                            >
-                                <svg className="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                                </svg>
-                                Categorías
-                            </Link>
 
                             <Link
                                 to="/admin/sales"
@@ -201,6 +165,21 @@ export default function AdminLayout() {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 Ventas
+                            </Link>
+                        </div>
+
+                        <div className="space-y-1 mt-6">
+                            <p className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Administración</p>
+
+                            <Link
+                                to="/admin/motorcycles"
+                                onClick={() => setIsSidebarOpen(false)}
+                                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${isActive('/admin/motorcycles')}`}
+                            >
+                                <svg className="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                                Motocicletas
                             </Link>
 
                             <Link
@@ -215,6 +194,17 @@ export default function AdminLayout() {
                             </Link>
 
                             <Link
+                                to="/admin/categories"
+                                onClick={() => setIsSidebarOpen(false)}
+                                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${isActive('/admin/categories')}`}
+                            >
+                                <svg className="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                </svg>
+                                Categorías
+                            </Link>
+
+                            <Link
                                 to="/admin/leads"
                                 onClick={() => setIsSidebarOpen(false)}
                                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${isActive('/admin/leads')}`}
@@ -222,7 +212,29 @@ export default function AdminLayout() {
                                 <svg className="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                                 </svg>
-                                Mensajes
+                                Contactos
+                            </Link>
+
+                            <Link
+                                to="/admin/comments"
+                                onClick={() => setIsSidebarOpen(false)}
+                                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${isActive('/admin/comments')}`}
+                            >
+                                <svg className="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
+                                Reseñas
+                            </Link>
+
+                            <Link
+                                to="/admin/users"
+                                onClick={() => setIsSidebarOpen(false)}
+                                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${isActive('/admin/users')}`}
+                            >
+                                <svg className="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                                Usuarios
                             </Link>
 
                             <Link
@@ -245,17 +257,6 @@ export default function AdminLayout() {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                 </svg>
                                 Logs
-                            </Link>
-
-                            <Link
-                                to="/admin/comments"
-                                onClick={() => setIsSidebarOpen(false)}
-                                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${isActive('/admin/comments')}`}
-                            >
-                                <svg className="w-5 h-5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                </svg>
-                                Reseñas
                             </Link>
                         </div>
                     </nav>

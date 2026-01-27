@@ -93,10 +93,10 @@ export default function LeadsManagement() {
     };
 
     return (
-        <div className="p-6">
+        <div className="p-3 sm:p-6">
             <div className="mb-8">
                 <h1 className="text-3xl font-display font-bold gradient-text mb-2 animate-fade-in">
-                    Mensajes de Contacto
+                    Formularios de Contacto
                 </h1>
                 <p className="text-gray-400">
                     Gestiona las consultas recibidas desde el formulario web.
@@ -157,19 +157,19 @@ export default function LeadsManagement() {
                                                     onClick={() => handleEdit(lead)}
                                                     variant="ghost"
                                                     size="sm"
-                                                    className="h-8 w-8 p-0 text-blue-400 hover:text-white hover:bg-blue-500/20"
+                                                    className="h-10 w-10 p-0 rounded-full text-blue-400 hover:text-white hover:bg-blue-500/20 transition-all"
                                                     title="Editar"
                                                 >
-                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                                                 </Button>
                                                 <Button
                                                     onClick={() => handleDelete(lead)}
                                                     variant="ghost"
                                                     size="sm"
-                                                    className="h-8 w-8 p-0 text-red-400 hover:text-white hover:bg-red-500/20"
+                                                    className="h-10 w-10 p-0 rounded-full text-red-400 hover:text-white hover:bg-red-500/20 transition-all"
                                                     title="Eliminar"
                                                 >
-                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                                                 </Button>
                                             </div>
                                         </td>
@@ -208,17 +208,17 @@ export default function LeadsManagement() {
                                             onClick={() => handleEdit(lead)}
                                             variant="ghost"
                                             size="sm"
-                                            className="p-1 h-8 w-8 text-blue-400 bg-blue-500/10 rounded-lg"
+                                            className="p-0 h-10 w-10 rounded-full text-blue-400 hover:text-white bg-blue-500/10 hover:bg-blue-500/20 transition-all"
                                         >
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                                         </Button>
                                         <Button
                                             onClick={() => handleDelete(lead)}
                                             variant="ghost"
                                             size="sm"
-                                            className="p-1 h-8 w-8 text-red-400 bg-red-500/10 rounded-lg"
+                                            className="p-0 h-10 w-10 rounded-full text-red-400 hover:text-white bg-red-500/10 hover:bg-red-500/20 transition-all"
                                         >
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                                         </Button>
                                     </div>
                                 </div>

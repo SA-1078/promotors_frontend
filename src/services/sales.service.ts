@@ -27,5 +27,10 @@ export const salesService = {
     updateSaleStatus: async (id: number, status: string) => {
         const response = await api.put(`/sales/${id}`, { estado: status });
         return response.data;
+    },
+
+    delete: async (id: number) => {
+        const response = await api.delete(`/sales/${id}`);
+        return response.data;
     }
 };

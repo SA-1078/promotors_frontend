@@ -54,21 +54,21 @@ export default function MotorcyclesCatalog() {
     const brands = Array.from(new Set(motorcycles.map(m => m.marca)));
 
     return (
-        <div className="min-h-screen bg-dark-900 py-12">
+        <div className="min-h-screen bg-dark-900 py-8 sm:py-12">
             <div className="container-custom">
                 {/* Header */}
-                <div className="mb-8 text-center md:text-left">
-                    <h1 className="text-4xl md:text-5xl font-display font-bold gradient-text mb-3">
+                <div className="mb-6 sm:mb-8 text-center md:text-left px-4 sm:px-0">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold gradient-text mb-2 sm:mb-3">
                         Catálogo de Motocicletas
                     </h1>
-                    <p className="text-gray-400 text-lg">
-                        Explora nuestra colección de <span className="text-white font-bold">{motorcycles.length}</span> máquinas de alto rendimiento
+                    <p className="text-gray-400 text-base sm:text-lg">
+                        Explora nuestra colección de motocicletas de alto rendimiento
                     </p>
                 </div>
 
                 {/* Filters */}
-                <Card className="p-6 mb-8 bg-dark-800/80 backdrop-blur-sm border-dark-700">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Card className="p-4 sm:p-6 mb-6 sm:mb-8 bg-dark-800/80 backdrop-blur-sm border-dark-700">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
                         {/* Search */}
                         <Input
                             label="Buscar"
@@ -84,14 +84,14 @@ export default function MotorcyclesCatalog() {
 
                         {/* Category Filter */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-400 mb-1.5 ml-1">
+                            <label className="block text-xs sm:text-sm font-medium text-gray-400 mb-1.5 ml-1">
                                 Categoría
                             </label>
                             <div className="relative">
                                 <select
                                     value={selectedCategory || ''}
                                     onChange={(e) => setSelectedCategory(e.target.value ? Number(e.target.value) : null)}
-                                    className="w-full bg-dark-800 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 appearance-none"
+                                    className="w-full bg-dark-800 border border-dark-700 rounded-lg px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-white focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 appearance-none"
                                 >
                                     <option value="">Todas las categorías</option>
                                     {categories.map((cat) => (
@@ -108,14 +108,14 @@ export default function MotorcyclesCatalog() {
 
                         {/* Brand Filter */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-400 mb-1.5 ml-1">
+                            <label className="block text-xs sm:text-sm font-medium text-gray-400 mb-1.5 ml-1">
                                 Marca
                             </label>
                             <div className="relative">
                                 <select
                                     value={selectedBrand}
                                     onChange={(e) => setSelectedBrand(e.target.value)}
-                                    className="w-full bg-dark-800 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 appearance-none"
+                                    className="w-full bg-dark-800 border border-dark-700 rounded-lg px-3 py-2.5 sm:px-4 sm:py-3 text-sm sm:text-base text-white focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 appearance-none"
                                 >
                                     <option value="">Todas las marcas</option>
                                     {brands.map((brand) => (
@@ -133,20 +133,20 @@ export default function MotorcyclesCatalog() {
 
                     {/* Active Filters Display */}
                     {(selectedCategory || selectedBrand || searchTerm) && (
-                        <div className="mt-6 pt-4 border-t border-dark-700 flex flex-wrap items-center gap-3">
-                            <span className="text-sm text-gray-400">Filtros activos:</span>
+                        <div className="mt-4 sm:mt-6 pt-4 border-t border-dark-700 flex flex-wrap items-center gap-2 sm:gap-3">
+                            <span className="text-xs sm:text-sm text-gray-400">Filtros activos:</span>
                             {searchTerm && (
-                                <Badge variant="primary" size="sm" className="flex items-center gap-1">
+                                <Badge variant="primary" size="sm" className="flex items-center gap-1 text-xs">
                                     🔍 "{searchTerm}"
                                 </Badge>
                             )}
                             {selectedCategory && (
-                                <Badge variant="info" size="sm" className="flex items-center gap-1">
+                                <Badge variant="info" size="sm" className="flex items-center gap-1 text-xs">
                                     🏷️ {categories.find(c => c.id_categoria === selectedCategory)?.nombre}
                                 </Badge>
                             )}
                             {selectedBrand && (
-                                <Badge variant="success" size="sm" className="flex items-center gap-1">
+                                <Badge variant="success" size="sm" className="flex items-center gap-1 text-xs">
                                     🏍️ {selectedBrand}
                                 </Badge>
                             )}
@@ -165,7 +165,7 @@ export default function MotorcyclesCatalog() {
                 </Card>
 
                 {/* Results Count */}
-                <div className="mb-6 flex justify-between items-center text-gray-400">
+                <div className="mb-4 sm:mb-6 flex justify-between items-center text-gray-400 text-sm sm:text-base px-4 sm:px-0">
                     <p>{filteredMotorcycles.length} {filteredMotorcycles.length === 1 ? 'motocicleta encontrada' : 'motocicletas encontradas'}</p>
                 </div>
 
@@ -195,20 +195,20 @@ export default function MotorcyclesCatalog() {
                 {!loading && !error && (
                     <>
                         {filteredMotorcycles.length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                                 {filteredMotorcycles.map((motorcycle) => (
                                     <MotorcycleCard key={motorcycle.id_moto} motorcycle={motorcycle} />
                                 ))}
                             </div>
                         ) : (
-                            <Card className="p-16 text-center border-dashed border-dark-600 bg-transparent">
-                                <svg className="w-20 h-20 text-dark-500 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <Card className="p-12 sm:p-16 text-center border-dashed border-dark-600 bg-transparent">
+                                <svg className="w-16 h-16 sm:w-20 sm:h-20 text-dark-500 mx-auto mb-4 sm:mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                <h3 className="text-2xl font-bold text-white mb-2">
+                                <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
                                     No se encontraron resultados
                                 </h3>
-                                <p className="text-gray-400 mb-8 max-w-sm mx-auto">
+                                <p className="text-gray-400 text-sm sm:text-base mb-6 sm:mb-8 max-w-sm mx-auto">
                                     No hay motocicletas que coincidan con tu búsqueda. Intenta con otros términos.
                                 </p>
                                 <Button
@@ -218,6 +218,7 @@ export default function MotorcyclesCatalog() {
                                         setSelectedBrand('');
                                     }}
                                     variant="secondary"
+                                    size="sm"
                                 >
                                     Borrar Filtros
                                 </Button>
