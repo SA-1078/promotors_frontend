@@ -1,6 +1,11 @@
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 
+<h1 style={{ color: "red" }}>
+    DEPLOY AUTOMÁTICO OK
+</h1>
+
+
 export default function Home() {
     return (
         <div>
