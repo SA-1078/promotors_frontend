@@ -7,9 +7,6 @@ import { Card } from '../../components/ui/Card';
 export default function Home() {
     return (
         <div>
-            <h1 style={{ color: "red" }}>
-                DEPLOY AUTOMÁTICO OK
-            </h1>
             {/* Hero Section */}
             <section className="relative h-[500px] md:h-[700px] flex items-center justify-center overflow-hidden bg-dark-900">
                 {/* Background Image with Overlay */}
