@@ -48,7 +48,7 @@ jobs:
 
             mkdir -p /var/www/react-app
             rm -rf /var/www/react-app/*
-            cp -r /tmp/react_build/dist/* /var/www/react-app/
+            cp -r /tmp/react_build/* /var/www/react-app/
 
             chown -R www-data:www-data /var/www/react-app
 
