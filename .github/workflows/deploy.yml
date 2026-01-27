@@ -48,7 +48,7 @@ jobs:
 
             mkdir -p /opt/billing-ui/dist
             rm -rf /opt/billing-ui/dist/*
-            cp -r /tmp/react_build/* /opt/billing-ui/dist/
+            cp -r /tmp/react_build/dist/* /opt/billing-ui/dist/
 
             chown -R www-data:www-data /opt/billing-ui/dist
 
