@@ -48,7 +48,7 @@ export default function Help() {
         },
         {
             question: '¿Qué métodos de pago aceptan?',
-            answer: 'Aceptamos transferencias bancarias, tarjetas de crédito/débito, y pagos en efectivo en nuestras instalaciones. Para compras en línea, procesamos pagos seguros a través de nuestra plataforma.'
+            answer: 'Aceptamos transferencias bancarias, tarjetas de crédito/débito, y pagos en efectivo en nuestras instalaciones físicas. Para compras en línea, procesamos pagos seguros a través de nuestra plataforma.'
         }
     ];
 

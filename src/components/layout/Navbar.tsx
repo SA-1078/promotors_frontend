@@ -10,6 +10,7 @@ export default function Navbar() {
     const location = useLocation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    // Add logic to close dropdown when clicking outside
 
     const handleLogout = () => {
         logout();
@@ -23,135 +24,155 @@ export default function Navbar() {
 
     const isActive = (path: string) => location.pathname === path;
 
+    const getDashboardPath = () => {
+        if (!user) return '/login';
+        switch (user.rol) {
+            case 'admin': return '/admin';
+            case 'empleado': return '/employee';
+            case 'cliente': return '/client';
+            default: return '/';
+        }
+    };
+
     return (
         <>
             <nav className="bg-dark-800/95 backdrop-blur-lg border-b border-dark-700/50 sticky top-0 z-50 shadow-lg">
-                <div className="container-custom">
-                    <div className="flex items-center justify-between h-16">
-                        {/* Logo - SIN CAMBIOS */}
-                        <Link to="/" className="flex items-center space-x-3" onClick={closeMobileMenu}>
-                            <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-accent-orange rounded-lg flex items-center justify-center shadow-lg">
-                                <span className="text-white font-bold text-xl">M</span>
-                            </div>
-                            <span className="text-2xl font-display font-bold gradient-text">
-                                MotoRShop
-                            </span>
+                <div className="relative w-full h-16">
+                    {/* Desktop Navigation - Absolute Center of Full Screen */}
+                    <div className="hidden md:flex items-center space-x-2 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+                        <Link
+                            to="/"
+                            className={`px-4 py-2 rounded-lg font-medium transition-all ${isActive('/')
+                                ? 'text-white bg-primary-600/20 border border-primary-600/30'
+                                : 'text-gray-300 hover:text-white hover:bg-dark-700'
+                                }`}
+                        >
+                            Inicio
+                        </Link>
+                        <Link
+                            to="/motorcycles"
+                            className={`px-4 py-2 rounded-lg font-medium transition-all ${isActive('/motorcycles')
+                                ? 'text-white bg-primary-600/20 border border-primary-600/30'
+                                : 'text-gray-300 hover:text-white hover:bg-dark-700'
+                                }`}
+                        >
+                            Catálogo
                         </Link>
 
-                        {/* Desktop Navigation */}
-                        <div className="hidden md:flex items-center space-x-2">
-                            <Link
-                                to="/"
-                                className={`px-4 py-2 rounded-lg font-medium transition-all ${isActive('/')
-                                        ? 'text-white bg-primary-600/20 border border-primary-600/30'
-                                        : 'text-gray-300 hover:text-white hover:bg-dark-700'
+                        {/* Dropdown Menu for Extra Pages */}
+                        <div className="relative">
+                            <button
+                                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-1 ${['/categories', '/reviews', '/about', '/help'].includes(location.pathname)
+                                    ? 'text-white bg-primary-600/20 border border-primary-600/30'
+                                    : 'text-gray-300 hover:text-white hover:bg-dark-700'
                                     }`}
                             >
-                                Inicio
-                            </Link>
-                            <Link
-                                to="/motorcycles"
-                                className={`px-4 py-2 rounded-lg font-medium transition-all ${isActive('/motorcycles')
-                                        ? 'text-white bg-primary-600/20 border border-primary-600/30'
-                                        : 'text-gray-300 hover:text-white hover:bg-dark-700'
-                                    }`}
-                            >
-                                Catálogo
-                            </Link>
-
-                            {/* Dropdown Menu for Extra Pages */}
-                            <div className="relative">
-                                <button
-                                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                    onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
-                                    className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-1 ${['/categories', '/reviews', '/about', '/help'].includes(location.pathname)
-                                            ? 'text-white bg-primary-600/20 border border-primary-600/30'
-                                            : 'text-gray-300 hover:text-white hover:bg-dark-700'
-                                        }`}
+                                Más
+                                <svg
+                                    className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
                                 >
-                                    Más
-                                    <svg
-                                        className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+
+                            {/* Dropdown Overlay for closing */}
+                            {isDropdownOpen && (
+                                <div
+                                    className="fixed inset-0 z-10"
+                                    onClick={() => setIsDropdownOpen(false)}
+                                />
+                            )}
+
+                            {/* Dropdown Content */}
+                            {isDropdownOpen && (
+                                <div className="absolute top-full left-0 mt-2 w-56 bg-dark-800 border border-dark-700 rounded-lg shadow-xl overflow-hidden z-20">
+                                    <Link
+                                        to="/categories"
+                                        onClick={() => setIsDropdownOpen(false)}
+                                        className={`flex items-center gap-3 px-4 py-3 transition-colors ${isActive('/categories')
+                                            ? 'bg-primary-600/20 text-white'
+                                            : 'text-gray-300 hover:bg-dark-700 hover:text-white'
+                                            }`}
                                     >
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                    </svg>
-                                </button>
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                                        </svg>
+                                        <span>Categorías</span>
+                                    </Link>
+                                    <Link
+                                        to="/reviews"
+                                        onClick={() => setIsDropdownOpen(false)}
+                                        className={`flex items-center gap-3 px-4 py-3 transition-colors ${isActive('/reviews')
+                                            ? 'bg-primary-600/20 text-white'
+                                            : 'text-gray-300 hover:bg-dark-700 hover:text-white'
+                                            }`}
+                                    >
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                                        </svg>
+                                        <span>Reseñas</span>
+                                    </Link>
+                                    <Link
+                                        to="/about"
+                                        onClick={() => setIsDropdownOpen(false)}
+                                        className={`flex items-center gap-3 px-4 py-3 transition-colors ${isActive('/about')
+                                            ? 'bg-primary-600/20 text-white'
+                                            : 'text-gray-300 hover:bg-dark-700 hover:text-white'
+                                            }`}
+                                    >
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span>Nosotros</span>
+                                    </Link>
+                                    <Link
+                                        to="/help"
+                                        onClick={() => setIsDropdownOpen(false)}
+                                        className={`flex items-center gap-3 px-4 py-3 transition-colors ${isActive('/help')
+                                            ? 'bg-primary-600/20 text-white'
+                                            : 'text-gray-300 hover:bg-dark-700 hover:text-white'
+                                            }`}
+                                    >
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span>Ayuda</span>
+                                    </Link>
+                                </div>
+                            )}
+                        </div>
 
-                                {/* Dropdown Content */}
-                                {isDropdownOpen && (
-                                    <div className="absolute top-full left-0 mt-2 w-56 bg-dark-800 border border-dark-700 rounded-lg shadow-xl overflow-hidden">
-                                        <Link
-                                            to="/categories"
-                                            onClick={() => setIsDropdownOpen(false)}
-                                            className={`flex items-center gap-3 px-4 py-3 transition-colors ${isActive('/categories')
-                                                    ? 'bg-primary-600/20 text-white'
-                                                    : 'text-gray-300 hover:bg-dark-700 hover:text-white'
-                                                }`}
-                                        >
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                                            </svg>
-                                            <span>Categorías</span>
-                                        </Link>
-                                        <Link
-                                            to="/reviews"
-                                            onClick={() => setIsDropdownOpen(false)}
-                                            className={`flex items-center gap-3 px-4 py-3 transition-colors ${isActive('/reviews')
-                                                    ? 'bg-primary-600/20 text-white'
-                                                    : 'text-gray-300 hover:bg-dark-700 hover:text-white'
-                                                }`}
-                                        >
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                                            </svg>
-                                            <span>Reseñas</span>
-                                        </Link>
-                                        <Link
-                                            to="/about"
-                                            onClick={() => setIsDropdownOpen(false)}
-                                            className={`flex items-center gap-3 px-4 py-3 transition-colors ${isActive('/about')
-                                                    ? 'bg-primary-600/20 text-white'
-                                                    : 'text-gray-300 hover:bg-dark-700 hover:text-white'
-                                                }`}
-                                        >
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                            <span>Nosotros</span>
-                                        </Link>
-                                        <Link
-                                            to="/help"
-                                            onClick={() => setIsDropdownOpen(false)}
-                                            className={`flex items-center gap-3 px-4 py-3 transition-colors ${isActive('/help')
-                                                    ? 'bg-primary-600/20 text-white'
-                                                    : 'text-gray-300 hover:bg-dark-700 hover:text-white'
-                                                }`}
-                                        >
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                            <span>Ayuda</span>
-                                        </Link>
-                                    </div>
-                                )}
-                            </div>
+                        <Link
+                            to="/contact"
+                            className={`px-4 py-2 rounded-lg font-medium transition-all ${isActive('/contact')
+                                ? 'text-white bg-primary-600/20 border border-primary-600/30'
+                                : 'text-gray-300 hover:text-white hover:bg-dark-700'
+                                }`}
+                        >
+                            Contacto
+                        </Link>
+                    </div>
 
-                            <Link
-                                to="/contact"
-                                className={`px-4 py-2 rounded-lg font-medium transition-all ${isActive('/contact')
-                                        ? 'text-white bg-primary-600/20 border border-primary-600/30'
-                                        : 'text-gray-300 hover:text-white hover:bg-dark-700'
-                                    }`}
-                            >
-                                Contacto
+                    {/* Logo and Actions - Asymmetric Padding */}
+                    <div className="w-full h-full flex items-center justify-between pl-6 lg:pl-16 pr-4 pointer-events-none relative z-20">
+                        {/* Logo */}
+                        <div className="flex-shrink-0 pointer-events-auto">
+                            <Link to="/" className="flex items-center space-x-3" onClick={closeMobileMenu}>
+                                <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-accent-orange rounded-lg flex items-center justify-center shadow-lg">
+                                    <span className="text-white font-bold text-xl">M</span>
+                                </div>
+                                <span className="text-2xl font-display font-bold gradient-text">
+                                    MotoRShop
+                                </span>
                             </Link>
                         </div>
 
                         {/* Right Actions */}
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-4 pointer-events-auto">
                             {user ? (
                                 <>
                                     {/* Cart Icon */}
@@ -172,7 +193,7 @@ export default function Navbar() {
                                     {/* Desktop: User Menu */}
                                     <div className="hidden md:flex items-center gap-2">
                                         <Link
-                                            to="/admin"
+                                            to={getDashboardPath()}
                                             className="flex items-center gap-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-dark-900 rounded-lg font-semibold transition-colors"
                                         >
                                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -283,8 +304,8 @@ export default function Navbar() {
                             to="/"
                             onClick={closeMobileMenu}
                             className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${isActive('/')
-                                    ? 'bg-primary-600/20 text-white border border-primary-600/30'
-                                    : 'text-gray-300 hover:text-white hover:bg-dark-800'
+                                ? 'bg-primary-600/20 text-white border border-primary-600/30'
+                                : 'text-gray-300 hover:text-white hover:bg-dark-800'
                                 }`}
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -297,8 +318,8 @@ export default function Navbar() {
                             to="/motorcycles"
                             onClick={closeMobileMenu}
                             className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${isActive('/motorcycles')
-                                    ? 'bg-primary-600/20 text-white border border-primary-600/30'
-                                    : 'text-gray-300 hover:text-white hover:bg-dark-800'
+                                ? 'bg-primary-600/20 text-white border border-primary-600/30'
+                                : 'text-gray-300 hover:text-white hover:bg-dark-800'
                                 }`}
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -311,8 +332,8 @@ export default function Navbar() {
                             to="/categories"
                             onClick={closeMobileMenu}
                             className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${isActive('/categories')
-                                    ? 'bg-primary-600/20 text-white border border-primary-600/30'
-                                    : 'text-gray-300 hover:text-white hover:bg-dark-800'
+                                ? 'bg-primary-600/20 text-white border border-primary-600/30'
+                                : 'text-gray-300 hover:text-white hover:bg-dark-800'
                                 }`}
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -325,8 +346,8 @@ export default function Navbar() {
                             to="/reviews"
                             onClick={closeMobileMenu}
                             className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${isActive('/reviews')
-                                    ? 'bg-primary-600/20 text-white border border-primary-600/30'
-                                    : 'text-gray-300 hover:text-white hover:bg-dark-800'
+                                ? 'bg-primary-600/20 text-white border border-primary-600/30'
+                                : 'text-gray-300 hover:text-white hover:bg-dark-800'
                                 }`}
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -339,8 +360,8 @@ export default function Navbar() {
                             to="/about"
                             onClick={closeMobileMenu}
                             className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${isActive('/about')
-                                    ? 'bg-primary-600/20 text-white border border-primary-600/30'
-                                    : 'text-gray-300 hover:text-white hover:bg-dark-800'
+                                ? 'bg-primary-600/20 text-white border border-primary-600/30'
+                                : 'text-gray-300 hover:text-white hover:bg-dark-800'
                                 }`}
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -353,8 +374,8 @@ export default function Navbar() {
                             to="/help"
                             onClick={closeMobileMenu}
                             className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${isActive('/help')
-                                    ? 'bg-primary-600/20 text-white border border-primary-600/30'
-                                    : 'text-gray-300 hover:text-white hover:bg-dark-800'
+                                ? 'bg-primary-600/20 text-white border border-primary-600/30'
+                                : 'text-gray-300 hover:text-white hover:bg-dark-800'
                                 }`}
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -367,8 +388,8 @@ export default function Navbar() {
                             to="/contact"
                             onClick={closeMobileMenu}
                             className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${isActive('/contact')
-                                    ? 'bg-primary-600/20 text-white border border-primary-600/30'
-                                    : 'text-gray-300 hover:text-white hover:bg-dark-800'
+                                ? 'bg-primary-600/20 text-white border border-primary-600/30'
+                                : 'text-gray-300 hover:text-white hover:bg-dark-800'
                                 }`}
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -383,7 +404,7 @@ export default function Navbar() {
                         {user ? (
                             <>
                                 <Link
-                                    to="/admin"
+                                    to={getDashboardPath()}
                                     onClick={closeMobileMenu}
                                     className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-yellow-500 hover:bg-yellow-600 text-dark-900 rounded-lg font-semibold transition-all"
                                 >

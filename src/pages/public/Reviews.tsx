@@ -3,22 +3,23 @@ import { api } from '../../services/api';
 import { Card } from '../../components/ui/Card';
 
 interface Comment {
-    id: number;
+    _id: string; // Updated to match Mongoose
     comentario: string;
     calificacion: number;
-    fechaCreacion: string;
-    idUsuario: number;
-    idMotocicleta: number;
+    fecha: string;
+    usuario_id: number;
+    motocicleta_id: number;
+    nombre_usuario?: string;
+    authorName?: string;
+    motorcycleName?: string;
+    nombre_moto?: string;
 }
 
-interface User {
-    id: number;
-    nombre: string;
-}
+
 
 export default function Reviews() {
     const [comments, setComments] = useState<Comment[]>([]);
-    const [users, setUsers] = useState<User[]>([]);
+    const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -27,22 +28,12 @@ export default function Reviews() {
 
     const loadData = async () => {
         try {
-            const [commentsRes, usersRes] = await Promise.all([
-                api.get('/comments'),
-                api.get('/users')
-            ]);
-            setComments(commentsRes.data.data);
-            setUsers(usersRes.data.data);
+            const response = await api.get('/comments');
+            setComments(response.data.data);
         } catch (error) {
-            console.error('Error loading reviews:', error);
         } finally {
             setLoading(false);
         }
-    };
-
-    const getUserName = (userId: number) => {
-        const user = users.find(u => u.id === userId);
-        return user?.nombre || 'Usuario';
     };
 
     const renderStars = (rating: number) => {
@@ -88,24 +79,55 @@ export default function Reviews() {
                     </p>
                 </div>
 
+                <div className="max-w-md mx-auto mb-10 relative">
+                    <input
+                        type="text"
+                        placeholder="Buscar por moto (marca/modelo)..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full bg-dark-800 border-dark-700 text-white placeholder-gray-500 rounded-lg py-3 px-12 focus:ring-primary-600 focus:border-primary-600 transition-colors"
+                    />
+                    <svg
+                        className="w-5 h-5 absolute left-4 top-3.5 text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+
                 {loading ? (
                     <div className="flex justify-center items-center py-20">
                         <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600"></div>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {comments.map((comment) => (
-                            <Card key={comment.id} className="hover:border-primary-600/50 transition-all">
+                        {comments.filter(comment => {
+                            const term = searchTerm.toLowerCase();
+                            const motoName = (comment.motorcycleName || comment.nombre_moto || '').toLowerCase();
+                            return motoName.includes(term);
+                        }).map((comment) => (
+                            <Card key={comment._id} className="hover:border-primary-600/50 transition-all">
                                 <div className="p-6">
                                     <div className="flex items-start justify-between mb-4">
                                         <div className="flex items-center gap-3">
                                             <div className="w-12 h-12 bg-gradient-to-br from-primary-600 to-accent-orange rounded-full flex items-center justify-center text-white font-bold">
-                                                {getUserName(comment.idUsuario).charAt(0).toUpperCase()}
+                                                {(comment.authorName || comment.nombre_usuario || 'U').charAt(0).toUpperCase()}
                                             </div>
                                             <div>
-                                                <p className="text-white font-semibold">{getUserName(comment.idUsuario)}</p>
+                                                <p className="text-white font-semibold">
+                                                    {comment.authorName || comment.nombre_usuario || 'Usuario MotorShop'}
+                                                </p>
+                                                <p className="text-xs text-primary-400 font-medium">
+                                                    {comment.motorcycleName || comment.nombre_moto || 'Motocicleta General'}
+                                                </p>
                                                 <p className="text-xs text-gray-500">
-                                                    {new Date(comment.fechaCreacion).toLocaleDateString('es-ES')}
+                                                    {comment.fecha ? new Date(comment.fecha).toLocaleDateString('es-ES', {
+                                                        year: 'numeric',
+                                                        month: 'long',
+                                                        day: 'numeric'
+                                                    }) : 'Fecha desconocida'}
                                                 </p>
                                             </div>
                                         </div>

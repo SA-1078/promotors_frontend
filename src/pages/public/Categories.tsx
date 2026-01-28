@@ -4,7 +4,7 @@ import { api } from '../../services/api';
 import { Card } from '../../components/ui/Card';
 
 interface Category {
-    id: number;
+    id_categoria: number;
     nombre: string;
     descripcion: string;
     fechaCreacion: string;
@@ -21,7 +21,7 @@ export default function Categories() {
     const loadCategories = async () => {
         try {
             const response = await api.get('/categories');
-            setCategories(response.data.data);
+            setCategories(response.data.data.items);
         } catch (error) {
             console.error('Error loading categories:', error);
         } finally {
@@ -50,8 +50,8 @@ export default function Categories() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {categories.map((category) => (
                             <Link
-                                key={category.id}
-                                to={`/motorcycles?category=${category.id}`}
+                                key={category.id_categoria}
+                                to={`/motorcycles?category=${category.id_categoria}`}
                                 className="group"
                             >
                                 <Card className="h-full hover:border-primary-600/50 transition-all duration-300 group-hover:transform group-hover:scale-105">
