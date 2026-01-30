@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { getMotorcycles } from '../../services/motorcycles.service';
 import { getCategories } from '../../services/categories.service';
 import type { Motorcycle, Category } from '../../types';
@@ -9,6 +10,7 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 
 export default function MotorcyclesCatalog() {
+    const [searchParams] = useSearchParams();
     const [motorcycles, setMotorcycles] = useState<Motorcycle[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true);
@@ -21,7 +23,11 @@ export default function MotorcyclesCatalog() {
 
     useEffect(() => {
         loadData();
-    }, []);
+        const categoryParam = searchParams.get('category');
+        if (categoryParam) {
+            setSelectedCategory(parseInt(categoryParam));
+        }
+    }, [searchParams]);
 
     const loadData = async () => {
         try {
@@ -40,7 +46,6 @@ export default function MotorcyclesCatalog() {
         }
     };
 
-    // Filter motorcycles
     const filteredMotorcycles = motorcycles.filter((moto) => {
         if (selectedCategory && moto.id_categoria !== selectedCategory) return false;
         if (selectedBrand && moto.marca.toLowerCase() !== selectedBrand.toLowerCase()) return false;

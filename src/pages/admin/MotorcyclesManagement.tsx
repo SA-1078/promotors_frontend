@@ -432,6 +432,7 @@ export default function MotorcyclesManagement() {
                                         type="number"
                                         required
                                         min="0"
+                                        step="0.01"
                                         value={formData.precio}
                                         onChange={(e) => setFormData({ ...formData, precio: parseFloat(e.target.value) })}
                                         className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"

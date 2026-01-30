@@ -10,7 +10,6 @@ export default function Navbar() {
     const location = useLocation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    // Add logic to close dropdown when clicking outside
 
     const handleLogout = () => {
         logout();

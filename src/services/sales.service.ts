@@ -2,6 +2,11 @@ import { api } from './api';
 import type { Sale } from '../types';
 
 export const salesService = {
+    getMyOrders: async (): Promise<Sale[]> => {
+        const response = await api.get<{ success: boolean; data: Sale[] }>('/sales/my-orders');
+        return response.data.data;
+    },
+
     getSales: async () => {
         try {
             const response = await api.get<{ success: boolean; data: Sale[] | { items: Sale[] } }>('/sales');

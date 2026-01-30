@@ -3,9 +3,7 @@ import axios from 'axios';
 import { Card, CardHeader } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 
-// TODO: Move to services/history.service.ts
 const getHistory = async () => {
-    // Backend endpoint is /view-history/history for logged in user
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/view-history/history`);
     return response.data;
 };

@@ -10,7 +10,7 @@ import Contact from '../pages/public/Contact';
 import Categories from '../pages/public/Categories';
 import Reviews from '../pages/public/Reviews';
 import AboutUs from '../pages/public/AboutUs';
-import Help from '../pages/public/Help';
+import Faq from '../pages/public/Faq';
 
 export const publicRoutes = {
     path: '/',
@@ -26,7 +26,8 @@ export const publicRoutes = {
         { path: 'categories', element: <Categories /> },
         { path: 'reviews', element: <Reviews /> },
         { path: 'about', element: <AboutUs /> },
-        { path: 'help', element: <Help /> },
+        { path: 'help', element: <Faq /> },
+        { path: 'faq', element: <Faq /> },
         { path: 'contact', element: <Contact /> },
     ],
 };

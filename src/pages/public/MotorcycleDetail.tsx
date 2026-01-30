@@ -73,17 +73,34 @@ export default function MotorcycleDetail() {
             navigate('/login');
             return;
         }
+
+        if (!newComment.comentario.trim()) {
+            alert('Por favor escribe un comentario');
+            return;
+        }
+
         try {
+            console.log('Submitting comment:', {
+                usuario_id: user.id_usuario,
+                motocicleta_id: Number(id),
+                comentario: newComment.comentario,
+                calificacion: newComment.calificacion
+            });
+
             await commentsService.create({
                 usuario_id: user.id_usuario,
                 motocicleta_id: Number(id),
                 comentario: newComment.comentario,
                 calificacion: newComment.calificacion
             });
+
             setNewComment({ comentario: '', calificacion: 5 });
             loadComments(Number(id));
-        } catch (err) {
+            alert('¡Reseña publicada exitosamente!');
+        } catch (err: any) {
             console.error('Error submitting comment:', err);
+            console.error('Error response:', err.response?.data);
+            alert(`Error al publicar la reseña: ${err.response?.data?.message || err.message || 'Error desconocido'}`);
         }
     };
 
