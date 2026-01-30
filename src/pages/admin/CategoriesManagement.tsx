@@ -22,14 +22,13 @@ export default function CategoriesManagement() {
         descripcion: ''
     });
 
-    // Create modal state
+  
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [createForm, setCreateForm] = useState({
         nombre: '',
         descripcion: ''
     });
 
-    // Delete modal state
     const [deletingCategory, setDeletingCategory] = useState<Category | null>(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 

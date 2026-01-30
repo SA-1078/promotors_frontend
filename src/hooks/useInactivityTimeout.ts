@@ -8,8 +8,8 @@ interface UseInactivityTimeoutProps {
     onLogout?: () => void;
 }
 
-const DEFAULT_WARNING_TIME = 10 * 60 * 1000; // 10 minutes
-const DEFAULT_LOGOUT_TIME = 15 * 60 * 1000;  // 15 minutes
+const DEFAULT_WARNING_TIME = 10 * 60 * 1000; 
+const DEFAULT_LOGOUT_TIME = 15 * 60 * 1000;  
 
 export function useInactivityTimeout({
     warningTime = DEFAULT_WARNING_TIME,
@@ -51,12 +51,12 @@ export function useInactivityTimeout({
         clearTimers();
         lastActivityRef.current = Date.now();
 
-        // Set warning timer
+        
         warningTimerRef.current = setTimeout(() => {
             handleWarning();
         }, warningTime);
 
-        // Set logout timer
+        
         logoutTimerRef.current = setTimeout(() => {
             handleLogout();
         }, logoutTime);
@@ -66,31 +66,30 @@ export function useInactivityTimeout({
         const now = Date.now();
         const timeSinceLastActivity = now - lastActivityRef.current;
 
-        // Only reset if it's been more than 1 second since last activity (debounce)
         if (timeSinceLastActivity > 1000) {
             resetTimers();
         }
     }, [resetTimers]);
 
     useEffect(() => {
-        // Only activate for logged-in users
+
         if (!user) {
             clearTimers();
             return;
         }
 
-        // Activity events to track
+       
         const events = ['mousedown', 'keydown', 'scroll', 'touchstart', 'click'];
 
-        // Start the timers initially
+
         resetTimers();
 
-        // Attach event listeners
+    
         events.forEach(event => {
             window.addEventListener(event, handleActivity);
         });
 
-        // Cleanup
+   
         return () => {
             clearTimers();
             events.forEach(event => {

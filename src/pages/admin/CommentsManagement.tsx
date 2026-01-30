@@ -29,7 +29,7 @@ export default function CommentsManagement() {
                 getMotorcycles()
             ]);
 
-            // Create search maps for O(1) access
+        
             const usersMap = (usersData as User[]).reduce((acc, user) => {
                 acc[user.id_usuario] = user;
                 return acc;

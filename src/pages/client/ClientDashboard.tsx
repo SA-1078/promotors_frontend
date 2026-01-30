@@ -187,7 +187,7 @@ export default function ClientDashboard() {
                 </div>
             </div>
 
-            {/* Recent Orders Section */}
+            {}
             {orders.length > 0 && (
                 <div>
                     <h2 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">
@@ -247,7 +247,7 @@ export default function ClientDashboard() {
                 </div>
             )}
 
-            {/* No Orders Message */}
+            {}
             {orders.length === 0 && (
                 <div className="bg-gradient-to-r from-primary-500/10 to-orange-500/10 border border-primary-500/30 rounded-xl p-8 text-center">
                     <svg className="w-16 h-16 text-primary-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

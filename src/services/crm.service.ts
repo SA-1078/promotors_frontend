@@ -13,7 +13,7 @@ export const crmService = {
     createLead: async (data: CreateLeadDto) => {
         const response = await api.post<{ success: boolean; data: Lead }>('/crm', {
             ...data,
-            estado: 'Nuevo' // Default status
+            estado: 'Nuevo' 
         });
         return response.data;
     },

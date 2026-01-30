@@ -30,7 +30,6 @@ export function useCounterAnimation(
 
             const progress = Math.min((timestamp - startTimeRef.current) / duration, 1);
 
-            // Easing function for smooth animation
             const easeOutQuad = (t: number) => t * (2 - t);
             const easedProgress = easeOutQuad(progress);
 

@@ -42,13 +42,13 @@ export default function InventoryManagement() {
 
         try {
             if (selectedItem.id_inventario && selectedItem.id_inventario > 0) {
-                // Update existing inventory
+            
                 await inventoryService.updateStock(selectedItem.id_inventario, {
                     stock_actual: newStock,
                     ubicacion: newUbicacion
                 });
             } else {
-                // Create new inventory record
+            
                 await inventoryService.createInventory({
                     id_moto: selectedItem.id_moto,
                     stock_actual: newStock,

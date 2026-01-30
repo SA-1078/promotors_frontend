@@ -1,4 +1,4 @@
-// User types
+
 export interface User {
     id_usuario: number;
     nombre: string;
@@ -25,7 +25,6 @@ export interface AuthResponse {
     user?: User;
 }
 
-// Motorcycle types
 export interface Motorcycle {
     id_moto: number;
     nombre: string;
@@ -52,7 +51,6 @@ export interface CreateMotorcycleDto {
     stock?: number;
 }
 
-// Category types
 export interface Category {
     id_categoria: number;
     nombre: string;
@@ -64,7 +62,7 @@ export interface CreateCategoryDto {
     descripcion?: string;
 }
 
-// Inventory types
+
 export interface Inventory {
     id_inventario: number;
     id_moto: number;
@@ -85,7 +83,7 @@ export interface CreateInventoryDto {
     ubicacion: string;
 }
 
-// Sale types
+
 export interface Sale {
     id_venta: number;
     id_usuario: number;
@@ -119,7 +117,7 @@ export interface CreateSaleDto {
     }[];
 }
 
-// CRM/Lead types
+
 export interface Lead {
     id_lead: number;
     nombre: string;
@@ -138,7 +136,6 @@ export interface CreateLeadDto {
     estado?: string;
 }
 
-// Cart types (MongoDB)
 export interface CartItem extends Motorcycle {
     quantity: number;
 }
@@ -158,7 +155,6 @@ export interface AddToCartDto {
     precio_unitario: number;
 }
 
-// Comment types (MongoDB)
 export interface Comment {
     _id: string;
     usuario_id: number;
@@ -167,7 +163,7 @@ export interface Comment {
     calificacion: number;
     fecha: string;
     moderado?: boolean;
-    // Optional fields for UI joining
+    
     usuario?: User;
     motocicleta?: Motorcycle;
 }
@@ -179,7 +175,7 @@ export interface CreateCommentDto {
     calificacion: number;
 }
 
-// View History types (MongoDB)
+
 export interface ViewHistory {
     _id: string;
     id_usuario: number;
@@ -188,7 +184,7 @@ export interface ViewHistory {
     motocicleta?: Motorcycle;
 }
 
-// System Logs types (MongoDB)
+
 export interface SystemLog {
     _id: string;
     usuario_id: number;
@@ -199,7 +195,7 @@ export interface SystemLog {
     usuario?: User;
 }
 
-// Pagination
+
 export interface PaginationMeta {
     totalItems: number;
     itemCount: number;
@@ -213,7 +209,6 @@ export interface PaginatedResponse<T> {
     meta: PaginationMeta;
 }
 
-// Common
 export interface ApiError {
     statusCode: number;
     message: string | string[];

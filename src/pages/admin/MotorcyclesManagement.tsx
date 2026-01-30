@@ -61,11 +61,11 @@ export default function MotorcyclesManagement() {
 
         try {
             await deleteMotorcycle(itemToDelete.id_moto, type);
-            // If hard, remove from list. If soft, only remove if we are not showing inactive.
+      
             if (type === 'hard' || !showInactive) {
                 setMotorcycles(motorcycles.filter(m => m.id_moto !== itemToDelete.id_moto));
             } else {
-                loadData(); // Reload to show updated status if showing inactive
+                loadData(); 
             }
             setDeleteModalOpen(false);
             setItemToDelete(null);
@@ -133,7 +133,7 @@ export default function MotorcyclesManagement() {
                 await createMotorcycle(payload);
             }
             setIsModalOpen(false);
-            loadData(); // Refresh list
+            loadData(); 
         } catch (err: any) {
             console.error('Error submitting form:', err);
             alert(err.response?.data?.message || 'Error al guardar');

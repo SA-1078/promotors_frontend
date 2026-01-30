@@ -28,7 +28,7 @@ export default function SystemLogs() {
                 })
             ]);
 
-            // Safeguard usersMap creation
+       
             const usersMap = Array.isArray(usersData) ? usersData.reduce((acc, user) => {
                 acc[user.id_usuario] = user;
                 return acc;

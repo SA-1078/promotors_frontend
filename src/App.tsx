@@ -5,9 +5,9 @@ import ScrollToTop from './components/ScrollToTop';
 import { useInactivityTimeout } from './hooks/useInactivityTimeout';
 import InactivityWarningModal from './components/modals/InactivityWarningModal';
 
-const WARNING_TIME = 10 * 60 * 1000; // 10 minutes
-const LOGOUT_TIME = 15 * 60 * 1000;  // 15 minutes
-const WARNING_DURATION = LOGOUT_TIME - WARNING_TIME; // 5 minutes warning period
+const WARNING_TIME = 10 * 60 * 1000; 
+const LOGOUT_TIME = 15 * 60 * 1000;  
+const WARNING_DURATION = LOGOUT_TIME - WARNING_TIME; 
 
 export default function App() {
   const routes = useRoutes(appRoutes);

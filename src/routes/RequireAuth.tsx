@@ -15,9 +15,9 @@ export default function RequireAuth({ children, requiredRole }: RequireAuthProps
     }
 
     if (requiredRole && user.rol !== requiredRole) {
-        // User doesn't have required role
+       
         if (user.rol === 'admin') {
-            // Admin can access everything
+          
             return <>{children}</>;
         }
         return <Navigate to="/" replace />;

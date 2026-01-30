@@ -4,7 +4,7 @@ import type { Category, CreateCategoryDto } from '../types';
 export const getCategories = async (options?: { withDeleted?: boolean }): Promise<Category[]> => {
     const params = options?.withDeleted ? { withDeleted: 'true' } : {};
     const response = await api.get<{ success: boolean; data: { items: Category[] } }>('/categories', { params });
-    return response.data.data.items; // Extract items from nested structure
+    return response.data.data.items; 
 };
 
 export const getCategoryById = async (id: number): Promise<Category> => {

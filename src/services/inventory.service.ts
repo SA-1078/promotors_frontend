@@ -17,7 +17,6 @@ export const inventoryService = {
                 ? motorcyclesResponse.data.data.items
                 : [];
 
-            // Merge data: Use motorcycles as the base source of truth
             return allMotorcycles.map((moto: any) => {
                 const inventoryItem = inventoryItems.find((inv: any) => inv.id_moto === moto.id_moto);
 

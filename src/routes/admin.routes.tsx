@@ -14,7 +14,6 @@ import FaqManagement from '../pages/admin/FaqManagement';
 
 import AdminDashboard from '../pages/admin/AdminDashboard';
 
-// Routes configuration for Admin Panel
 export const adminRoutes = {
     path: '/admin',
     element: (

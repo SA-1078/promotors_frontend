@@ -13,7 +13,7 @@ export default function UsersManagement() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    // Edit modal state
+  
     const [editingUser, setEditingUser] = useState<User | null>(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [editForm, setEditForm] = useState({
@@ -21,10 +21,9 @@ export default function UsersManagement() {
         email: '',
         telefono: '',
         rol: '',
-        password: '' // Optional - if empty, password won't be updated
+        password: '' 
     });
 
-    // Create modal state
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [createForm, setCreateForm] = useState({
         nombre: '',
@@ -78,7 +77,7 @@ export default function UsersManagement() {
         if (!editingUser) return;
 
         try {
-            // Only send fields that have values
+      
             const updateData: any = {};
             if (editForm.nombre.trim()) updateData.nombre = editForm.nombre.trim();
             if (editForm.email.trim()) updateData.email = editForm.email.trim();
