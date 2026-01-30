@@ -77,9 +77,16 @@ export default function ClientDashboard() {
                 <div className="bg-dark-900 rounded-2xl p-6 md:p-8">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                         <div>
-                            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold text-white mb-2">
-                                👋 Bienvenido, {user?.nombre}
-                            </h1>
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg">
+                                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                </div>
+                                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold text-white">
+                                    Bienvenido, {user?.nombre}
+                                </h1>
+                            </div>
                             <p className="text-gray-400 text-sm sm:text-base">
                                 Tu panel de compras y favoritos
                             </p>
@@ -145,9 +152,16 @@ export default function ClientDashboard() {
 
             {/* Quick Actions */}
             <div>
-                <h2 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">
-                    ⚡ Accesos Rápidos
-                </h2>
+                <div className="flex items-center gap-3 mb-4 md:mb-6">
+                    <div className="p-2 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg">
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <h2 className="text-xl md:text-2xl font-bold text-white">
+                        Accesos Rápidos
+                    </h2>
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <QuickActionCard
                         title="Ver Catálogo"
@@ -190,9 +204,16 @@ export default function ClientDashboard() {
             {/* Recent Orders Section */}
             {orders.length > 0 && (
                 <div>
-                    <h2 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">
-                        📦 Pedidos Recientes
-                    </h2>
+                    <div className="flex items-center gap-3 mb-4 md:mb-6">
+                        <div className="p-2 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg">
+                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                            </svg>
+                        </div>
+                        <h2 className="text-xl md:text-2xl font-bold text-white">
+                            Pedidos Recientes
+                        </h2>
+                    </div>
                     <div className="space-y-3">
                         {orders.slice(0, 3).map((order) => (
                             <div
@@ -206,10 +227,10 @@ export default function ClientDashboard() {
                                                 Pedido #{order.id_venta}
                                             </p>
                                             <span className={`text-xs px-2 py-1 rounded-full ${order.estado.toLowerCase().includes('completad') || order.estado.toLowerCase().includes('pagad')
-                                                    ? 'bg-green-500/20 text-green-400'
-                                                    : order.estado.toLowerCase().includes('pendiente')
-                                                        ? 'bg-yellow-500/20 text-yellow-400'
-                                                        : 'bg-gray-500/20 text-gray-400'
+                                                ? 'bg-green-500/20 text-green-400'
+                                                : order.estado.toLowerCase().includes('pendiente')
+                                                    ? 'bg-yellow-500/20 text-yellow-400'
+                                                    : 'bg-gray-500/20 text-gray-400'
                                                 }`}>
                                                 {order.estado}
                                             </span>

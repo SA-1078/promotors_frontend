@@ -61,7 +61,7 @@ export default function Contact() {
                                 </div>
                                 <div>
                                     <h3 className="text-xl font-bold text-white mb-2">Visítanos</h3>
-                                    <p className="text-gray-400">Av. Principal 123 y Calle Secundaria</p>
+                                    <p className="text-gray-400">Av. Occidental y Mariana de Jesús</p>
                                     <p className="text-gray-400">Quito, Ecuador</p>
                                 </div>
                             </div>
@@ -74,7 +74,7 @@ export default function Contact() {
                                 </div>
                                 <div>
                                     <h3 className="text-xl font-bold text-white mb-2">Llámanos</h3>
-                                    <p className="text-gray-400">+593 99 123 4567</p>
+                                    <p className="text-gray-400">+593 995 020 929</p>
                                     <p className="text-gray-400">02 234 5678</p>
                                 </div>
                             </div>

@@ -3,6 +3,7 @@ import { useRoutes } from 'react-router-dom';
 import { appRoutes } from './routes/app.routes';
 import ScrollToTop from './components/ScrollToTop';
 import { useInactivityTimeout } from './hooks/useInactivityTimeout';
+import { useAuth } from './context/AuthContext';
 import InactivityWarningModal from './components/modals/InactivityWarningModal';
 
 const WARNING_TIME = 10 * 60 * 1000; // 10 minutes
@@ -11,6 +12,7 @@ const WARNING_DURATION = LOGOUT_TIME - WARNING_TIME; // 5 minutes warning period
 
 export default function App() {
   const routes = useRoutes(appRoutes);
+  const { logout } = useAuth();
   const [showWarning, setShowWarning] = useState(false);
 
   const { resetActivity } = useInactivityTimeout({
@@ -29,7 +31,7 @@ export default function App() {
 
   const handleLogoutNow = () => {
     setShowWarning(false);
-    window.location.href = '/login';
+    logout();
   };
 
   return (

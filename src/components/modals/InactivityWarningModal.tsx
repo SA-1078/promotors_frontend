@@ -26,6 +26,7 @@ export default function InactivityWarningModal({
             setCountdown(prev => {
                 if (prev <= 1) {
                     clearInterval(interval);
+                    setTimeout(() => onLogoutNow(), 100);
                     return 0;
                 }
                 return prev - 1;
@@ -33,7 +34,7 @@ export default function InactivityWarningModal({
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [isOpen, remainingSeconds]);
+    }, [isOpen, remainingSeconds, onLogoutNow]);
 
     const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
@@ -42,7 +43,7 @@ export default function InactivityWarningModal({
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onStayLoggedIn} title="⏰ Inactividad Detectada">
+        <Modal isOpen={isOpen} onClose={onStayLoggedIn} title="Inactividad Detectada">
             <div className="text-center py-4">
                 <div className="w-20 h-20 mx-auto mb-6 bg-yellow-500/20 rounded-full flex items-center justify-center">
                     <svg className="w-10 h-10 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
