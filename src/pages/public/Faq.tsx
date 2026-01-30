@@ -36,16 +36,22 @@ export default function FaqPage() {
         : faqs.filter(faq => faq.categoria === selectedCategory);
 
     return (
-        <div className="min-h-screen bg-dark-900 pt-24 pb-16">
+        <div className="min-h-screen bg-dark-900 py-8 sm:py-12">
             <div className="container-custom">
-                {/* Header */}
-                <div className="text-center mb-12">
-                    <h1 className="text-4xl md:text-6xl font-display font-bold gradient-text mb-4">
-                        Preguntas Frecuentes
-                    </h1>
-                    <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-                        Encuentra respuestas a las preguntas más comunes sobre nuestros productos y servicios
-                    </p>
+                {/* Header with Gradient */}
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-blue-500 to-orange-600 p-[2px] mb-12">
+                    <div className="bg-dark-900 rounded-2xl p-6 md:p-8">
+                        <div className="text-center">
+                            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold mb-3">
+                                <span className="bg-gradient-to-r from-blue-500 via-blue-400 to-orange-500 bg-clip-text text-transparent">
+                                    ❓ Preguntas Frecuentes
+                                </span>
+                            </h1>
+                            <p className="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto">
+                                Encuentra respuestas a las preguntas más comunes sobre nuestros productos y servicios
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Category Filter */}
@@ -56,8 +62,8 @@ export default function FaqPage() {
                                 key={category}
                                 onClick={() => setSelectedCategory(category || 'all')}
                                 className={`px-6 py-2 rounded-full font-medium transition-all ${selectedCategory === category
-                                    ? 'bg-gradient-to-r from-primary-600 to-accent-orange text-white shadow-lg'
-                                    : 'bg-dark-800 text-gray-400 hover:bg-dark-700 hover:text-white'
+                                        ? 'bg-gradient-to-r from-primary-600 to-accent-orange text-white shadow-lg'
+                                        : 'bg-dark-800 text-gray-400 hover:bg-dark-700 hover:text-white'
                                     }`}
                             >
                                 {category === 'all' ? 'Todas' : category}

@@ -1,24 +1,68 @@
-import { Card } from '../../components/ui/Card';
-
 export default function AboutUs() {
+    const values = [
+        {
+            icon: '🏆',
+            title: 'Excelencia',
+            description: 'Nos esforzamos por ofrecer productos y servicios de la más alta calidad en todo momento.',
+            gradient: 'from-yellow-500 to-orange-500'
+        },
+        {
+            icon: '🤝',
+            title: 'Confianza',
+            description: 'Construimos relaciones duraderas basadas en la honestidad y transparencia con nuestros clientes.',
+            gradient: 'from-blue-500 to-cyan-500'
+        },
+        {
+            icon: '🚀',
+            title: 'Pasión',
+            description: 'Compartimos el amor por las motocicletas y la emoción de la conducción con nuestra comunidad.',
+            gradient: 'from-red-500 to-pink-500'
+        },
+        {
+            icon: '🛡️',
+            title: 'Seguridad',
+            description: 'Priorizamos la seguridad de nuestros clientes en cada venta y servicio que ofrecemos.',
+            gradient: 'from-green-500 to-emerald-500'
+        },
+        {
+            icon: '💡',
+            title: 'Innovación',
+            description: 'Constantemente actualizamos nuestro catálogo con las últimas tendencias y tecnologías.',
+            gradient: 'from-purple-500 to-violet-500'
+        },
+        {
+            icon: '🌟',
+            title: 'Satisfacción',
+            description: 'El éxito de nuestros clientes es nuestro éxito. Nos dedicamos a superar sus expectativas.',
+            gradient: 'from-amber-500 to-yellow-500'
+        }
+    ];
+
     return (
-        <div className="min-h-screen bg-dark-900 pt-24 pb-16">
+        <div className="min-h-screen bg-dark-900 py-8 sm:py-12">
             <div className="container-custom">
-                {/* Hero Section */}
-                <div className="text-center mb-16">
-                    <h1 className="text-4xl md:text-6xl font-display font-bold gradient-text mb-4">
-                        Sobre Nosotros
-                    </h1>
-                    <p className="text-gray-300 text-lg max-w-3xl mx-auto">
-                        Más de una década conectando a los amantes de las motocicletas con sus máquinas ideales
-                    </p>
+                {/* Hero Header with Gradient */}
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-blue-500 to-orange-600 p-[2px] mb-12">
+                    <div className="bg-dark-900 rounded-2xl p-6 md:p-8">
+                        <div className="text-center">
+                            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold mb-3">
+                                <span className="bg-gradient-to-r from-blue-500 via-blue-400 to-orange-500 bg-clip-text text-transparent">
+                                    🏍️ Sobre Nosotros
+                                </span>
+                            </h1>
+                            <p className="text-gray-400 text-sm sm:text-base max-w-3xl mx-auto">
+                                Más de una década conectando a los amantes de las motocicletas con sus máquinas ideales
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Mission & Vision */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-                    <Card className="hover:border-primary-600/50 transition-all">
-                        <div className="p-8">
-                            <div className="w-16 h-16 bg-gradient-to-br from-primary-600 to-accent-orange rounded-xl flex items-center justify-center mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-12">
+                    {/* Mission Card */}
+                    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 p-[2px] group hover:scale-105 transition-transform">
+                        <div className="h-full bg-dark-900 rounded-2xl p-6 md:p-8">
+                            <div className="bg-gradient-to-br from-blue-500 to-cyan-600 w-16 h-16 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg shadow-blue-500/50">
                                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
@@ -30,11 +74,12 @@ export default function AboutUs() {
                                 entre los entusiastas de las motos y sus sueños sobre dos ruedas.
                             </p>
                         </div>
-                    </Card>
+                    </div>
 
-                    <Card className="hover:border-primary-600/50 transition-all">
-                        <div className="p-8">
-                            <div className="w-16 h-16 bg-gradient-to-br from-primary-600 to-accent-orange rounded-xl flex items-center justify-center mb-6">
+                    {/* Vision Card */}
+                    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 p-[2px] group hover:scale-105 transition-transform">
+                        <div className="h-full bg-dark-900 rounded-2xl p-6 md:p-8">
+                            <div className="bg-gradient-to-br from-orange-500 to-red-600 w-16 h-16 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg shadow-orange-500/50">
                                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -47,80 +92,63 @@ export default function AboutUs() {
                                 a expandir nuestra presencia y convertirnos en la primera opción para quienes buscan libertad sobre ruedas.
                             </p>
                         </div>
-                    </Card>
+                    </div>
                 </div>
 
-                {/* Values */}
-                <div className="mb-16">
-                    <h2 className="text-3xl font-bold text-center gradient-text mb-10">Nuestros Valores</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {[
-                            {
-                                icon: '🏆',
-                                title: 'Excelencia',
-                                description: 'Nos esforzamos por ofrecer productos y servicios de la más alta calidad en todo momento.'
-                            },
-                            {
-                                icon: '🤝',
-                                title: 'Confianza',
-                                description: 'Construimos relaciones duraderas basadas en la honestidad y transparencia con nuestros clientes.'
-                            },
-                            {
-                                icon: '🚀',
-                                title: 'Pasión',
-                                description: 'Compartimos el amor por las motocicletas y la emoción de la conducción con nuestra comunidad.'
-                            },
-                            {
-                                icon: '🛡️',
-                                title: 'Seguridad',
-                                description: 'Priorizamos la seguridad de nuestros clientes en cada venta y servicio que ofrecemos.'
-                            },
-                            {
-                                icon: '💡',
-                                title: 'Innovación',
-                                description: 'Constantemente actualizamos nuestro catálogo con las últimas tendencias y tecnologías.'
-                            },
-                            {
-                                icon: '🌟',
-                                title: 'Satisfacción',
-                                description: 'El éxito de nuestros clientes es nuestro éxito. Nos dedicamos a superar sus expectativas.'
-                            }
-                        ].map((value, index) => (
-                            <Card key={index} className="hover:border-primary-600/50 transition-all text-center">
-                                <div className="p-6">
-                                    <div className="text-5xl mb-4">{value.icon}</div>
+                {/* Values Section */}
+                <div className="mb-12">
+                    <div className="text-center mb-8">
+                        <h2 className="text-3xl font-bold mb-2">
+                            <span className="bg-gradient-to-r from-blue-500 via-blue-400 to-orange-500 bg-clip-text text-transparent">
+                                Nuestros Valores
+                            </span>
+                        </h2>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {values.map((value, index) => (
+                            <div
+                                key={index}
+                                className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${value.gradient} p-[2px] group hover:scale-105 transition-transform`}
+                            >
+                                <div className="h-full bg-dark-900 rounded-2xl p-6 text-center">
+                                    <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">
+                                        {value.icon}
+                                    </div>
                                     <h3 className="text-xl font-bold text-white mb-3">{value.title}</h3>
-                                    <p className="text-gray-400 text-sm">{value.description}</p>
+                                    <p className="text-gray-400 text-sm leading-relaxed">{value.description}</p>
                                 </div>
-                            </Card>
+                            </div>
                         ))}
                     </div>
                 </div>
 
                 {/* Our Story */}
-                <Card className="hover:border-primary-600/50 transition-all">
-                    <div className="p-8 md:p-12">
-                        <h2 className="text-3xl font-bold gradient-text mb-6 text-center">Nuestra Historia</h2>
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-orange-600 p-[2px]">
+                    <div className="bg-dark-900 rounded-2xl p-8 md:p-12">
+                        <h2 className="text-3xl font-bold mb-6 text-center">
+                            <span className="bg-gradient-to-r from-blue-500 via-purple-400 to-orange-500 bg-clip-text text-transparent">
+                                Nuestra Historia
+                            </span>
+                        </h2>
                         <div className="max-w-3xl mx-auto space-y-4 text-gray-300 leading-relaxed">
                             <p>
-                                MotoRShop nació de la pasión por las motocicletas y el deseo de crear un espacio donde los
+                                <strong className="text-white">MotoRShop</strong> nació de la pasión por las motocicletas y el deseo de crear un espacio donde los
                                 entusiastas pudieran encontrar las mejores opciones del mercado. Fundada hace más de 10 años,
                                 comenzamos como un pequeño taller familiar que evolucionó hasta convertirse en una de las
                                 plataformas más confiables del sector.
                             </p>
                             <p>
-                                A lo largo de nuestra trayectoria, hemos ayudado a miles de clientes a encontrar la motocicleta
+                                A lo largo de nuestra trayectoria, hemos ayudado a <strong className="text-blue-400">miles de clientes</strong> a encontrar la motocicleta
                                 de sus sueños. Desde deportivas de alta gama hasta cruisers clásicas, nuestra selección
                                 cuidadosamente curada garantiza que cada cliente encuentre exactamente lo que busca.
                             </p>
                             <p>
-                                Hoy en día, nos enorgullece ser más que una simple tienda: somos una comunidad de apasionados
-                                que comparten el amor por la libertad, la aventura y la emoción que solo una motocicleta puede
-                                ofrecer. Gracias por ser parte de nuestra historia.
+                                Hoy en día, nos enorgullece ser más que una simple tienda: somos una <strong className="text-orange-400">comunidad de apasionados</strong> que comparten el amor por la libertad, la aventura y la emoción que solo una motocicleta puede
+                                ofrecer. <strong className="text-white">Gracias por ser parte de nuestra historia.</strong>
                             </p>
                         </div>
                     </div>
-                </Card>
+                </div>
             </div>
         </div>
     );

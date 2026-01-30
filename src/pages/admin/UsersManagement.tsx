@@ -20,7 +20,8 @@ export default function UsersManagement() {
         nombre: '',
         email: '',
         telefono: '',
-        rol: ''
+        rol: '',
+        password: '' // Optional - if empty, password won't be updated
     });
 
     // Create modal state
@@ -66,7 +67,8 @@ export default function UsersManagement() {
             nombre: user.nombre,
             email: user.email,
             telefono: user.telefono,
-            rol: user.rol
+            rol: user.rol,
+            password: '' 
         });
         setIsEditModalOpen(true);
     };
@@ -76,10 +78,21 @@ export default function UsersManagement() {
         if (!editingUser) return;
 
         try {
-            await updateUser(editingUser.id_usuario, editForm);
+            // Only send fields that have values
+            const updateData: any = {};
+            if (editForm.nombre.trim()) updateData.nombre = editForm.nombre.trim();
+            if (editForm.email.trim()) updateData.email = editForm.email.trim();
+            if (editForm.telefono.trim()) updateData.telefono = editForm.telefono.trim();
+            if (editForm.rol) updateData.rol = editForm.rol;
+            if (editForm.password && editForm.password.trim()) {
+                updateData.password = editForm.password.trim();
+            }
+
+            await updateUser(editingUser.id_usuario, updateData);
             setIsEditModalOpen(false);
             setEditingUser(null);
             loadUsers();
+            alert('Usuario actualizado exitosamente');
         } catch (err: any) {
             alert(err.response?.data?.message || 'Error al actualizar usuario');
         }
@@ -341,6 +354,17 @@ export default function UsersManagement() {
                                 onChange={(e) => setEditForm({ ...editForm, telefono: e.target.value })}
                                 required
                             />
+
+                            <div>
+                                <Input
+                                    label="Nueva Contraseña (opcional)"
+                                    type="password"
+                                    value={editForm.password}
+                                    onChange={(e) => setEditForm({ ...editForm, password: e.target.value })}
+                                    placeholder="Dejar vacío para no cambiar"
+                                />
+                                <p className="text-xs text-gray-500 mt-1">Solo llena este campo si deseas cambiar la contraseña</p>
+                            </div>
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-300 mb-2">Rol</label>
