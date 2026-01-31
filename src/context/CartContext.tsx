@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type { CartItem, Motorcycle } from '../types';
+import { useAuth } from './AuthContext';
 
 interface CartContextType {
     items: CartItem[];
@@ -17,16 +18,33 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
+    const { user } = useAuth();
+
+    // Generar clave de localStorage específica por usuario
+    const getCartKey = () => {
+        return user ? `cart_items_${user.id_usuario}` : 'cart_items_guest';
+    };
+
     const [items, setItems] = useState<CartItem[]>(() => {
-        const saved = localStorage.getItem('cart_items');
+        const cartKey = user ? `cart_items_${user.id_usuario}` : 'cart_items_guest';
+        const saved = localStorage.getItem(cartKey);
         return saved ? JSON.parse(saved) : [];
     });
 
     const [isCartOpen, setIsCartOpen] = useState(false);
 
+    // Guardar carrito en localStorage cuando cambie
     useEffect(() => {
-        localStorage.setItem('cart_items', JSON.stringify(items));
-    }, [items]);
+        const cartKey = getCartKey();
+        localStorage.setItem(cartKey, JSON.stringify(items));
+    }, [items, user?.id_usuario]);
+
+    // Cargar carrito correcto cuando cambie el usuario
+    useEffect(() => {
+        const cartKey = getCartKey();
+        const saved = localStorage.getItem(cartKey);
+        setItems(saved ? JSON.parse(saved) : []);
+    }, [user?.id_usuario]);
 
     const addToCart = (motorcycle: Motorcycle) => {
         setItems(current => {
