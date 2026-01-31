@@ -7,9 +7,9 @@ export const salesService = {
         return response.data.data;
     },
 
-    getSales: async () => {
+    getSales: async (params?: { page?: number; limit?: number; search?: string }) => {
         try {
-            const response = await api.get<{ success: boolean; data: Sale[] | { items: Sale[] } }>('/sales');
+            const response = await api.get<{ success: boolean; data: { items: Sale[] } | Sale[] }>('/sales', { params });
             if (response.data && 'data' in response.data) {
                 const data = response.data.data;
                 if (Array.isArray(data)) return data;

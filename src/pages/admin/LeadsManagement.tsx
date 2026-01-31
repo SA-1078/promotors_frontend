@@ -5,10 +5,16 @@ import type { Lead } from '../../types';
 import { Card, CardHeader } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
+import { Pagination } from '../../components/ui/Pagination';
 
 export default function LeadsManagement() {
     const [leads, setLeads] = useState<Lead[]>([]);
     const [loading, setLoading] = useState(true);
+
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
@@ -22,14 +28,17 @@ export default function LeadsManagement() {
 
     useEffect(() => {
         loadLeads();
-    }, []);
+    }, [currentPage]);
 
     const loadLeads = async () => {
         try {
             setLoading(true);
-            const response = await crmService.getLeads();
-            setLeads(Array.isArray(response.data) ? response.data :
-                (response.data as any).items ? (response.data as any).items : []);
+            const response = await crmService.getLeads({ page: currentPage });
+            const data = Array.isArray(response.data) ? response.data :
+                (response.data as any).items ? (response.data as any).items : [];
+            setLeads(data);
+            setTotalItems(data.length);
+            setTotalPages(Math.ceil(data.length / 100));
         } catch (error) {
             console.error('Error loading leads', error);
         } finally {
@@ -230,131 +239,142 @@ export default function LeadsManagement() {
                             </div>
                         )}
                     </div>
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        totalItems={totalItems}
+                        onPageChange={setCurrentPage}
+                    />
                 </Card>
-            )}
+            )
+            }
 
             {/* Create Modal */}
-            {isCreateModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsCreateModalOpen(false)} />
-                    <div className="relative bg-dark-800 rounded-2xl p-8 max-w-md w-full shadow-2xl border border-dark-700">
-                        <h2 className="text-2xl font-bold text-white mb-6">Nuevo Lead</h2>
-                        <form onSubmit={handleCreate} className="space-y-4">
-                            <div>
-                                <label className="block text-gray-400 text-sm font-bold mb-2">Nombre</label>
-                                <input
-                                    type="text"
-                                    value={formData.nombre}
-                                    onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                                    className="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-500"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-gray-400 text-sm font-bold mb-2">Email</label>
-                                <input
-                                    type="email"
-                                    value={formData.email}
-                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    className="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-500"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-gray-400 text-sm font-bold mb-2">Teléfono</label>
-                                <input
-                                    type="tel"
-                                    value={formData.telefono}
-                                    onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
-                                    className="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-500"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-gray-400 text-sm font-bold mb-2">Mensaje</label>
-                                <textarea
-                                    value={formData.mensaje}
-                                    onChange={(e) => setFormData({ ...formData, mensaje: e.target.value })}
-                                    className="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-500 h-24"
-                                    required
-                                />
-                            </div>
-                            <div className="flex gap-4 pt-4">
-                                <Button type="button" onClick={() => setIsCreateModalOpen(false)} variant="ghost" className="flex-1">Cancelar</Button>
-                                <Button type="submit" variant="primary" className="flex-1">Guardar</Button>
-                            </div>
-                        </form>
+            {
+                isCreateModalOpen && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsCreateModalOpen(false)} />
+                        <div className="relative bg-dark-800 rounded-2xl p-8 max-w-md w-full shadow-2xl border border-dark-700">
+                            <h2 className="text-2xl font-bold text-white mb-6">Nuevo Lead</h2>
+                            <form onSubmit={handleCreate} className="space-y-4">
+                                <div>
+                                    <label className="block text-gray-400 text-sm font-bold mb-2">Nombre</label>
+                                    <input
+                                        type="text"
+                                        value={formData.nombre}
+                                        onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+                                        className="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-500"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-gray-400 text-sm font-bold mb-2">Email</label>
+                                    <input
+                                        type="email"
+                                        value={formData.email}
+                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                        className="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-500"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-gray-400 text-sm font-bold mb-2">Teléfono</label>
+                                    <input
+                                        type="tel"
+                                        value={formData.telefono}
+                                        onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
+                                        className="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-500"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-gray-400 text-sm font-bold mb-2">Mensaje</label>
+                                    <textarea
+                                        value={formData.mensaje}
+                                        onChange={(e) => setFormData({ ...formData, mensaje: e.target.value })}
+                                        className="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-500 h-24"
+                                        required
+                                    />
+                                </div>
+                                <div className="flex gap-4 pt-4">
+                                    <Button type="button" onClick={() => setIsCreateModalOpen(false)} variant="ghost" className="flex-1">Cancelar</Button>
+                                    <Button type="submit" variant="primary" className="flex-1">Guardar</Button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             {/* Edit Modal */}
-            {isEditModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsEditModalOpen(false)} />
-                    <div className="relative bg-dark-800 rounded-2xl p-8 max-w-md w-full shadow-2xl border border-dark-700">
-                        <h2 className="text-2xl font-bold text-white mb-6">Editar Lead</h2>
-                        <form onSubmit={handleUpdate} className="space-y-4">
-                            <div>
-                                <label className="block text-gray-400 text-sm font-bold mb-2">Nombre</label>
-                                <input
-                                    type="text"
-                                    value={formData.nombre}
-                                    onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                                    className="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-500"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-gray-400 text-sm font-bold mb-2">Email</label>
-                                <input
-                                    type="email"
-                                    value={formData.email}
-                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    className="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-500"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-gray-400 text-sm font-bold mb-2">Teléfono</label>
-                                <input
-                                    type="tel"
-                                    value={formData.telefono}
-                                    onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
-                                    className="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-500"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-gray-400 text-sm font-bold mb-2">Estado</label>
-                                <select
-                                    value={formData.estado}
-                                    onChange={(e) => setFormData({ ...formData, estado: e.target.value })}
-                                    className="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-500"
-                                >
-                                    <option value="Nuevo">Nuevo</option>
-                                    <option value="Contactado">Contactado</option>
-                                    <option value="Pendiente">Pendiente</option>
-                                    <option value="Cerrado">Cerrado</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block text-gray-400 text-sm font-bold mb-2">Mensaje</label>
-                                <textarea
-                                    value={formData.mensaje}
-                                    onChange={(e) => setFormData({ ...formData, mensaje: e.target.value })}
-                                    className="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-500 h-24"
-                                    required
-                                />
-                            </div>
-                            <div className="flex gap-4 pt-4">
-                                <Button type="button" onClick={() => setIsEditModalOpen(false)} variant="ghost" className="flex-1">Cancelar</Button>
-                                <Button type="submit" variant="primary" className="flex-1">Actualizar</Button>
-                            </div>
-                        </form>
+            {
+                isEditModalOpen && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsEditModalOpen(false)} />
+                        <div className="relative bg-dark-800 rounded-2xl p-8 max-w-md w-full shadow-2xl border border-dark-700">
+                            <h2 className="text-2xl font-bold text-white mb-6">Editar Lead</h2>
+                            <form onSubmit={handleUpdate} className="space-y-4">
+                                <div>
+                                    <label className="block text-gray-400 text-sm font-bold mb-2">Nombre</label>
+                                    <input
+                                        type="text"
+                                        value={formData.nombre}
+                                        onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+                                        className="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-500"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-gray-400 text-sm font-bold mb-2">Email</label>
+                                    <input
+                                        type="email"
+                                        value={formData.email}
+                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                        className="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-500"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-gray-400 text-sm font-bold mb-2">Teléfono</label>
+                                    <input
+                                        type="tel"
+                                        value={formData.telefono}
+                                        onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
+                                        className="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-500"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-gray-400 text-sm font-bold mb-2">Estado</label>
+                                    <select
+                                        value={formData.estado}
+                                        onChange={(e) => setFormData({ ...formData, estado: e.target.value })}
+                                        className="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-500"
+                                    >
+                                        <option value="Nuevo">Nuevo</option>
+                                        <option value="Contactado">Contactado</option>
+                                        <option value="Pendiente">Pendiente</option>
+                                        <option value="Cerrado">Cerrado</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-gray-400 text-sm font-bold mb-2">Mensaje</label>
+                                    <textarea
+                                        value={formData.mensaje}
+                                        onChange={(e) => setFormData({ ...formData, mensaje: e.target.value })}
+                                        className="w-full bg-dark-900 border border-dark-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary-500 h-24"
+                                        required
+                                    />
+                                </div>
+                                <div className="flex gap-4 pt-4">
+                                    <Button type="button" onClick={() => setIsEditModalOpen(false)} variant="ghost" className="flex-1">Cancelar</Button>
+                                    <Button type="submit" variant="primary" className="flex-1">Actualizar</Button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 }

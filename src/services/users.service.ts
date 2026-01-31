@@ -1,8 +1,8 @@
 import { api } from './api';
 import type { User } from '../types';
 
-export const getUsers = async (): Promise<User[]> => {
-    const response = await api.get<{ success: boolean; data: { items: User[] } }>('/users');
+export const getUsers = async (params?: { page?: number; limit?: number; search?: string }): Promise<User[]> => {
+    const response = await api.get<{ success: boolean; data: { items: User[] } }>('/users', { params });
     return response.data.data.items;
 };
 

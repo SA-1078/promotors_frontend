@@ -6,6 +6,7 @@ import { Card, CardHeader } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Input } from '../../components/ui/Input';
+import { Pagination } from '../../components/ui/Pagination';
 
 export default function CategoriesManagement() {
     const { user: currentUser } = useAuth();
@@ -13,6 +14,11 @@ export default function CategoriesManagement() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [showInactive, setShowInactive] = useState(false);
+
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
 
     // Edit modal state
     const [editingCategory, setEditingCategory] = useState<Category | null>(null);
@@ -35,13 +41,16 @@ export default function CategoriesManagement() {
 
     useEffect(() => {
         loadCategories();
-    }, [showInactive]);
+    }, [showInactive, currentPage]);
 
     const loadCategories = async () => {
         try {
             setLoading(true);
-            const data = await getCategories({ withDeleted: showInactive });
-            setCategories(data);
+            const response = await getCategories({ withDeleted: showInactive, page: currentPage });
+            setCategories(response);
+            // Note: Backend should return pagination info, for now we'll estimate
+            setTotalItems(response.length);
+            setTotalPages(Math.ceil(response.length / 100));
         } catch (err: any) {
             setError(err.response?.data?.message || 'Error al cargar categorías');
         } finally {
@@ -290,6 +299,14 @@ export default function CategoriesManagement() {
                             </Button>
                         </div>
                     )}
+
+                    {/* Pagination Controls */}
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        totalItems={totalItems}
+                        onPageChange={setCurrentPage}
+                    />
                 </Card>
             )}
 

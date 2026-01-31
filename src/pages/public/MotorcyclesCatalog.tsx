@@ -32,7 +32,7 @@ export default function MotorcyclesCatalog() {
         try {
             setLoading(true);
             const [motosData, catsData] = await Promise.all([
-                getMotorcycles(),
+                getMotorcycles({ limit: 100 }),
                 getCategories(),
             ]);
 

@@ -1,8 +1,10 @@
 import { api } from './api';
 import type { Category, CreateCategoryDto } from '../types';
 
-export const getCategories = async (options?: { withDeleted?: boolean }): Promise<Category[]> => {
-    const params = options?.withDeleted ? { withDeleted: 'true' } : {};
+export const getCategories = async (options?: { withDeleted?: boolean; page?: number }): Promise<Category[]> => {
+    const params: any = {};
+    if (options?.withDeleted) params.withDeleted = 'true';
+    if (options?.page) params.page = options.page;
     const response = await api.get<{ success: boolean; data: { items: Category[] } }>('/categories', { params });
     return response.data.data.items;
 };

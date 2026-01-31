@@ -5,6 +5,7 @@ import type { Motorcycle, Category, CreateMotorcycleDto } from '../../types';
 import { Card, CardHeader } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
+import { Pagination } from '../../components/ui/Pagination';
 
 export default function MotorcyclesManagement() {
     const [motorcycles, setMotorcycles] = useState<Motorcycle[]>([]);
@@ -12,6 +13,11 @@ export default function MotorcyclesManagement() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [showInactive, setShowInactive] = useState(false);
+
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
@@ -30,17 +36,19 @@ export default function MotorcyclesManagement() {
 
     useEffect(() => {
         loadData();
-    }, [showInactive]);
+    }, [showInactive, currentPage]);
 
     const loadData = async () => {
         try {
             setLoading(true);
             const [motosData, catsData] = await Promise.all([
-                getMotorcycles({ withDeleted: showInactive }),
+                getMotorcycles({ withDeleted: showInactive, page: currentPage }),
                 getCategories(),
             ]);
             setMotorcycles(motosData);
             setCategories(catsData);
+            setTotalItems(motosData.length);
+            setTotalPages(Math.ceil(motosData.length / 100));
         } catch (err: any) {
             setError(err.response?.data?.message || 'Error al cargar los datos');
         } finally {
@@ -361,206 +369,218 @@ export default function MotorcyclesManagement() {
                             </Button>
                         </div>
                     )}
+
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        totalItems={totalItems}
+                        onPageChange={setCurrentPage}
+                    />
                 </Card>
-            )}
+            )
+            }
 
             {/* Create/Edit Modal */}
-            {isModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                    <div className="bg-dark-800 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-dark-600 shadow-xl">
-                        <div className="p-6 border-b border-dark-600 sticky top-0 bg-dark-800 z-10 flex justify-between items-center">
-                            <h2 className="text-xl font-bold text-white">
-                                {isEditing ? 'Editar Motocicleta' : 'Nueva Motocicleta'}
-                            </h2>
-                            <button
-                                onClick={() => setIsModalOpen(false)}
-                                className="text-gray-400 hover:text-white"
-                            >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
-
-                        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">Nombre</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        value={formData.nombre}
-                                        onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                                        className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">Marca</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        value={formData.marca}
-                                        onChange={(e) => setFormData({ ...formData, marca: e.target.value })}
-                                        className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">Modelo</label>
-                                    <input
-                                        type="text"
-                                        required
-                                        value={formData.modelo}
-                                        onChange={(e) => setFormData({ ...formData, modelo: e.target.value })}
-                                        className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">Año</label>
-                                    <input
-                                        type="number"
-                                        required
-                                        min="1900"
-                                        max={new Date().getFullYear() + 1}
-                                        value={formData.anio}
-                                        onChange={(e) => setFormData({ ...formData, anio: parseInt(e.target.value) })}
-                                        className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">Precio</label>
-                                    <input
-                                        type="number"
-                                        required
-                                        min="0"
-                                        step="0.01"
-                                        value={formData.precio}
-                                        onChange={(e) => setFormData({ ...formData, precio: parseFloat(e.target.value) })}
-                                        className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">Categoría</label>
-                                    <select
-                                        value={formData.id_categoria}
-                                        onChange={(e) => setFormData({ ...formData, id_categoria: parseInt(e.target.value) })}
-                                        className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                                    >
-                                        {categories.map(cat => (
-                                            <option key={cat.id_categoria} value={cat.id_categoria}>
-                                                {cat.nombre}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-400 mb-1">Imagen URL</label>
-                                <input
-                                    type="url"
-                                    value={formData.imagen_url}
-                                    onChange={(e) => setFormData({ ...formData, imagen_url: e.target.value })}
-                                    className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                                    placeholder="https://..."
-                                />
-                            </div>
-
-                            {!isEditing && (
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-400 mb-1">Stock Inicial</label>
-                                    <input
-                                        type="number"
-                                        min="0"
-                                        value={formData.stock || 0}
-                                        onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) || 0 })}
-                                        className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
-                                        placeholder="0"
-                                    />
-                                </div>
-                            )}
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-400 mb-1">Descripción</label>
-                                <textarea
-                                    required
-                                    rows={4}
-                                    value={formData.descripcion}
-                                    onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })}
-                                    className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500 resize-none"
-                                />
-                            </div>
-
-                            <div className="flex justify-end gap-3 pt-4 border-t border-dark-600">
+            {
+                isModalOpen && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                        <div className="bg-dark-800 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-dark-600 shadow-xl">
+                            <div className="p-6 border-b border-dark-600 sticky top-0 bg-dark-800 z-10 flex justify-between items-center">
+                                <h2 className="text-xl font-bold text-white">
+                                    {isEditing ? 'Editar Motocicleta' : 'Nueva Motocicleta'}
+                                </h2>
                                 <button
-                                    type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="px-4 py-2 text-gray-400 hover:text-white transition-colors"
+                                    className="text-gray-400 hover:text-white"
+                                >
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <form onSubmit={handleSubmit} className="p-6 space-y-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-400 mb-1">Nombre</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={formData.nombre}
+                                            onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+                                            className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-400 mb-1">Marca</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={formData.marca}
+                                            onChange={(e) => setFormData({ ...formData, marca: e.target.value })}
+                                            className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-400 mb-1">Modelo</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={formData.modelo}
+                                            onChange={(e) => setFormData({ ...formData, modelo: e.target.value })}
+                                            className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-400 mb-1">Año</label>
+                                        <input
+                                            type="number"
+                                            required
+                                            min="1900"
+                                            max={new Date().getFullYear() + 1}
+                                            value={formData.anio}
+                                            onChange={(e) => setFormData({ ...formData, anio: parseInt(e.target.value) })}
+                                            className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-400 mb-1">Precio</label>
+                                        <input
+                                            type="number"
+                                            required
+                                            min="0"
+                                            step="0.01"
+                                            value={formData.precio}
+                                            onChange={(e) => setFormData({ ...formData, precio: parseFloat(e.target.value) })}
+                                            className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-400 mb-1">Categoría</label>
+                                        <select
+                                            value={formData.id_categoria}
+                                            onChange={(e) => setFormData({ ...formData, id_categoria: parseInt(e.target.value) })}
+                                            className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                                        >
+                                            {categories.map(cat => (
+                                                <option key={cat.id_categoria} value={cat.id_categoria}>
+                                                    {cat.nombre}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-400 mb-1">Imagen URL</label>
+                                    <input
+                                        type="url"
+                                        value={formData.imagen_url}
+                                        onChange={(e) => setFormData({ ...formData, imagen_url: e.target.value })}
+                                        className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                                        placeholder="https://..."
+                                    />
+                                </div>
+
+                                {!isEditing && (
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-400 mb-1">Stock Inicial</label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            value={formData.stock || 0}
+                                            onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) || 0 })}
+                                            className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500"
+                                            placeholder="0"
+                                        />
+                                    </div>
+                                )}
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-400 mb-1">Descripción</label>
+                                    <textarea
+                                        required
+                                        rows={4}
+                                        value={formData.descripcion}
+                                        onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })}
+                                        className="w-full bg-dark-700 border border-dark-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-500 resize-none"
+                                    />
+                                </div>
+
+                                <div className="flex justify-end gap-3 pt-4 border-t border-dark-600">
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsModalOpen(false)}
+                                        className="px-4 py-2 text-gray-400 hover:text-white transition-colors"
+                                    >
+                                        Cancelar
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="btn-primary"
+                                    >
+                                        {isEditing ? 'Guardar Cambios' : 'Crear Motocicleta'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )
+            }
+
+            {/* Delete Confirmation Modal */}
+            {
+                deleteModalOpen && itemToDelete && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                        <div className="bg-dark-800 rounded-2xl w-full max-w-md border border-dark-600 shadow-xl p-6">
+                            <h3 className="text-xl font-bold text-white mb-2">Eliminar Motocicleta</h3>
+                            <p className="text-gray-400 mb-6">
+                                ¿Qué deseas hacer con la motocicleta <span className="text-primary-400 font-medium">"{itemToDelete.nombre}"</span>?
+                            </p>
+
+                            <div className="space-y-3">
+                                <button
+                                    onClick={() => confirmDelete('soft')}
+                                    className="w-full btn-secondary flex items-center justify-center gap-2"
+                                    disabled={!!itemToDelete.deletedAt}
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                                    </svg>
+                                    <div>
+                                        <span className="block font-bold">Solo Inactivar</span>
+                                        <span className="text-xs text-gray-400 font-normal">
+                                            {itemToDelete.deletedAt ? 'Ya está inactivo' : 'Ocultar del catálogo. Mantiene historial de ventas.'}
+                                        </span>
+                                    </div>
+                                </button>
+
+                                <button
+                                    onClick={() => confirmDelete('hard')}
+                                    className="w-full bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/50 rounded-lg px-4 py-3 flex items-center justify-center gap-2 transition-colors"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                    <div>
+                                        <span className="block font-bold">Eliminar Definitivamente</span>
+                                        <span className="text-xs text-red-300/70 font-normal">Borra TODO. Fallará si hay ventas.</span>
+                                    </div>
+                                </button>
+                            </div>
+
+                            <div className="mt-6 flex justify-end">
+                                <button
+                                    onClick={() => setDeleteModalOpen(false)}
+                                    className="text-gray-400 hover:text-white px-4 py-2"
                                 >
                                     Cancelar
                                 </button>
-                                <button
-                                    type="submit"
-                                    className="btn-primary"
-                                >
-                                    {isEditing ? 'Guardar Cambios' : 'Crear Motocicleta'}
-                                </button>
                             </div>
-                        </form>
-                    </div>
-                </div>
-            )}
-
-            {/* Delete Confirmation Modal */}
-            {deleteModalOpen && itemToDelete && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                    <div className="bg-dark-800 rounded-2xl w-full max-w-md border border-dark-600 shadow-xl p-6">
-                        <h3 className="text-xl font-bold text-white mb-2">Eliminar Motocicleta</h3>
-                        <p className="text-gray-400 mb-6">
-                            ¿Qué deseas hacer con la motocicleta <span className="text-primary-400 font-medium">"{itemToDelete.nombre}"</span>?
-                        </p>
-
-                        <div className="space-y-3">
-                            <button
-                                onClick={() => confirmDelete('soft')}
-                                className="w-full btn-secondary flex items-center justify-center gap-2"
-                                disabled={!!itemToDelete.deletedAt}
-                            >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                                </svg>
-                                <div>
-                                    <span className="block font-bold">Solo Inactivar</span>
-                                    <span className="text-xs text-gray-400 font-normal">
-                                        {itemToDelete.deletedAt ? 'Ya está inactivo' : 'Ocultar del catálogo. Mantiene historial de ventas.'}
-                                    </span>
-                                </div>
-                            </button>
-
-                            <button
-                                onClick={() => confirmDelete('hard')}
-                                className="w-full bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/50 rounded-lg px-4 py-3 flex items-center justify-center gap-2 transition-colors"
-                            >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                                <div>
-                                    <span className="block font-bold">Eliminar Definitivamente</span>
-                                    <span className="text-xs text-red-300/70 font-normal">Borra TODO. Fallará si hay ventas.</span>
-                                </div>
-                            </button>
-                        </div>
-
-                        <div className="mt-6 flex justify-end">
-                            <button
-                                onClick={() => setDeleteModalOpen(false)}
-                                className="text-gray-400 hover:text-white px-4 py-2"
-                            >
-                                Cancelar
-                            </button>
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 }

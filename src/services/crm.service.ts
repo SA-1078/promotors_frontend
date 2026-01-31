@@ -18,8 +18,8 @@ export const crmService = {
         return response.data;
     },
 
-    getLeads: async () => {
-        const response = await api.get('/crm?limit=50');
+    getLeads: async (params?: { page?: number; limit?: number }) => {
+        const response = await api.get('/crm', { params });
         return response.data;
     },
 

@@ -5,6 +5,7 @@ import { formatCurrency, formatDate } from '../../utils/format';
 import { Card, CardHeader } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
+import { Pagination } from '../../components/ui/Pagination';
 
 export default function SalesManagement() {
     const [sales, setSales] = useState<Sale[]>([]);
@@ -15,16 +16,23 @@ export default function SalesManagement() {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [editStatus, setEditStatus] = useState('');
 
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
+
     useEffect(() => {
         loadSales();
-    }, []);
+    }, [currentPage]);
 
     const loadSales = async () => {
         try {
             setLoading(true);
-            const data = await salesService.getSales();
+            const data = await salesService.getSales({ page: currentPage });
             if (Array.isArray(data)) {
                 setSales(data);
+                setTotalItems(data.length);
+                setTotalPages(Math.ceil(data.length / 100));
             }
         } catch (error) {
             console.error('Error loading sales:', error);
@@ -249,190 +257,203 @@ export default function SalesManagement() {
                             </div>
                         )}
                     </div>
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        totalItems={totalItems}
+                        onPageChange={setCurrentPage}
+                    />
                 </Card>
-            )}
+            )
+            }
 
             {/* Sale Detail Modal */}
-            {isDetailModalOpen && selectedSale && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div
-                        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-                        onClick={() => setIsDetailModalOpen(false)}
-                    />
-                    <div className="relative bg-dark-800 rounded-2xl p-8 max-w-2xl w-full shadow-2xl border border-dark-700 animate-scale-in max-h-[90vh] overflow-y-auto">
-                        <div className="flex justify-between items-start mb-6">
-                            <div>
-                                <h2 className="text-2xl font-bold text-white">Detalles de Venta</h2>
-                                <p className="text-primary-400 font-mono text-lg">#{selectedSale.id_venta}</p>
-                            </div>
-                            <button
-                                onClick={() => setIsDetailModalOpen(false)}
-                                className="text-gray-400 hover:text-white transition-colors"
-                            >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                            <div className="bg-dark-900/50 p-4 rounded-xl border border-dark-700">
-                                <h3 className="text-gray-400 text-sm font-bold uppercase mb-2">Cliente</h3>
-                                <p className="text-white font-medium">{selectedSale.usuario?.nombre || 'N/A'}</p>
-                                <p className="text-gray-400 text-sm">{selectedSale.usuario?.email || 'N/A'}</p>
-                            </div>
-                            <div className="bg-dark-900/50 p-4 rounded-xl border border-dark-700">
-                                <h3 className="text-gray-400 text-sm font-bold uppercase mb-2">Información de Pago</h3>
-                                <p className="text-white font-medium capitalize">{selectedSale.metodo_pago}</p>
-                                <p className="text-gray-400 text-sm">{formatDate(selectedSale.fecha_venta)}</p>
-                            </div>
-                        </div>
-
-                        <h3 className="text-white font-bold mb-4">Productos Comprados</h3>
-                        <div className="space-y-4 mb-8">
-                            {selectedSale.detalles?.map((detalle, index) => (
-                                <div key={index} className="flex items-center gap-4 bg-dark-900 p-4 rounded-xl border border-dark-700">
-                                    <div className="w-16 h-16 bg-dark-800 rounded-lg overflow-hidden flex-shrink-0">
-                                        {detalle.motocicleta?.imagen_url ? (
-                                            <img src={detalle.motocicleta.imagen_url} alt="" className="w-full h-full object-cover" />
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-gray-600">
-                                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                </svg>
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="flex-1">
-                                        <p className="text-white font-bold">{detalle.motocicleta?.nombre || `Moto #${detalle.id_moto}`}</p>
-                                        <p className="text-gray-400 text-sm">Cantidad: {detalle.cantidad}</p>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="text-white font-bold">{formatCurrency(Number(detalle.subtotal))}</p>
-                                        <p className="text-gray-500 text-xs">{formatCurrency(Number(detalle.precio_unitario))} c/u</p>
-                                    </div>
+            {
+                isDetailModalOpen && selectedSale && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                        <div
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                            onClick={() => setIsDetailModalOpen(false)}
+                        />
+                        <div className="relative bg-dark-800 rounded-2xl p-8 max-w-2xl w-full shadow-2xl border border-dark-700 animate-scale-in max-h-[90vh] overflow-y-auto">
+                            <div className="flex justify-between items-start mb-6">
+                                <div>
+                                    <h2 className="text-2xl font-bold text-white">Detalles de Venta</h2>
+                                    <p className="text-primary-400 font-mono text-lg">#{selectedSale.id_venta}</p>
                                 </div>
-                            ))}
-                        </div>
+                                <button
+                                    onClick={() => setIsDetailModalOpen(false)}
+                                    className="text-gray-400 hover:text-white transition-colors"
+                                >
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
 
-                        <div className="flex justify-end pt-6 border-t border-dark-700">
-                            <div className="text-right">
-                                <p className="text-gray-400 mb-1">Total Pagado</p>
-                                <p className="text-3xl font-display font-bold text-primary-400">{formatCurrency(Number(selectedSale.total))}</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                <div className="bg-dark-900/50 p-4 rounded-xl border border-dark-700">
+                                    <h3 className="text-gray-400 text-sm font-bold uppercase mb-2">Cliente</h3>
+                                    <p className="text-white font-medium">{selectedSale.usuario?.nombre || 'N/A'}</p>
+                                    <p className="text-gray-400 text-sm">{selectedSale.usuario?.email || 'N/A'}</p>
+                                </div>
+                                <div className="bg-dark-900/50 p-4 rounded-xl border border-dark-700">
+                                    <h3 className="text-gray-400 text-sm font-bold uppercase mb-2">Información de Pago</h3>
+                                    <p className="text-white font-medium capitalize">{selectedSale.metodo_pago}</p>
+                                    <p className="text-gray-400 text-sm">{formatDate(selectedSale.fecha_venta)}</p>
+                                </div>
+                            </div>
+
+                            <h3 className="text-white font-bold mb-4">Productos Comprados</h3>
+                            <div className="space-y-4 mb-8">
+                                {selectedSale.detalles?.map((detalle, index) => (
+                                    <div key={index} className="flex items-center gap-4 bg-dark-900 p-4 rounded-xl border border-dark-700">
+                                        <div className="w-16 h-16 bg-dark-800 rounded-lg overflow-hidden flex-shrink-0">
+                                            {detalle.motocicleta?.imagen_url ? (
+                                                <img src={detalle.motocicleta.imagen_url} alt="" className="w-full h-full object-cover" />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-gray-600">
+                                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="flex-1">
+                                            <p className="text-white font-bold">{detalle.motocicleta?.nombre || `Moto #${detalle.id_moto}`}</p>
+                                            <p className="text-gray-400 text-sm">Cantidad: {detalle.cantidad}</p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-white font-bold">{formatCurrency(Number(detalle.subtotal))}</p>
+                                            <p className="text-gray-500 text-xs">{formatCurrency(Number(detalle.precio_unitario))} c/u</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="flex justify-end pt-6 border-t border-dark-700">
+                                <div className="text-right">
+                                    <p className="text-gray-400 mb-1">Total Pagado</p>
+                                    <p className="text-3xl font-display font-bold text-primary-400">{formatCurrency(Number(selectedSale.total))}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             {/* Edit Status Modal */}
-            {isEditModalOpen && selectedSale && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div
-                        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-                        onClick={() => setIsEditModalOpen(false)}
-                    />
-                    <div className="relative bg-dark-800 rounded-2xl p-6 max-w-md w-full shadow-2xl border border-dark-700 animate-scale-in">
-                        <div className="flex justify-between items-start mb-6">
-                            <div>
-                                <h2 className="text-xl font-bold text-white">Editar Estado</h2>
-                                <p className="text-gray-400 text-sm mt-1">Venta #{selectedSale.id_venta}</p>
+            {
+                isEditModalOpen && selectedSale && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                        <div
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                            onClick={() => setIsEditModalOpen(false)}
+                        />
+                        <div className="relative bg-dark-800 rounded-2xl p-6 max-w-md w-full shadow-2xl border border-dark-700 animate-scale-in">
+                            <div className="flex justify-between items-start mb-6">
+                                <div>
+                                    <h2 className="text-xl font-bold text-white">Editar Estado</h2>
+                                    <p className="text-gray-400 text-sm mt-1">Venta #{selectedSale.id_venta}</p>
+                                </div>
+                                <button
+                                    onClick={() => setIsEditModalOpen(false)}
+                                    className="text-gray-400 hover:text-white transition-colors"
+                                >
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
                             </div>
-                            <button
-                                onClick={() => setIsEditModalOpen(false)}
-                                className="text-gray-400 hover:text-white transition-colors"
-                            >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
 
-                        <div className="mb-6">
-                            <label className="block text-sm font-medium text-gray-300 mb-2">
-                                Estado de la Venta
-                            </label>
-                            <select
-                                value={editStatus}
-                                onChange={(e) => setEditStatus(e.target.value)}
-                                className="w-full px-4 py-3 bg-dark-900 border border-dark-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                            >
-                                <option value="pendiente">Pendiente</option>
-                                <option value="completada">Completada</option>
-                                <option value="cancelada">Cancelada</option>
-                            </select>
-                        </div>
+                            <div className="mb-6">
+                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                    Estado de la Venta
+                                </label>
+                                <select
+                                    value={editStatus}
+                                    onChange={(e) => setEditStatus(e.target.value)}
+                                    className="w-full px-4 py-3 bg-dark-900 border border-dark-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                >
+                                    <option value="pendiente">Pendiente</option>
+                                    <option value="completada">Completada</option>
+                                    <option value="cancelada">Cancelada</option>
+                                </select>
+                            </div>
 
-                        <div className="flex gap-3">
-                            <Button
-                                onClick={() => setIsEditModalOpen(false)}
-                                variant="secondary"
-                                className="flex-1"
-                            >
-                                Cancelar
-                            </Button>
-                            <Button
-                                onClick={handleUpdateStatus}
-                                variant="primary"
-                                className="flex-1"
-                            >
-                                Guardar
-                            </Button>
+                            <div className="flex gap-3">
+                                <Button
+                                    onClick={() => setIsEditModalOpen(false)}
+                                    variant="secondary"
+                                    className="flex-1"
+                                >
+                                    Cancelar
+                                </Button>
+                                <Button
+                                    onClick={handleUpdateStatus}
+                                    variant="primary"
+                                    className="flex-1"
+                                >
+                                    Guardar
+                                </Button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             {/* Delete Confirmation Modal */}
-            {isDeleteModalOpen && selectedSale && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div
-                        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-                        onClick={() => setIsDeleteModalOpen(false)}
-                    />
-                    <div className="relative bg-dark-800 rounded-2xl p-6 max-w-md w-full shadow-2xl border border-dark-700 animate-scale-in">
-                        <div className="flex justify-between items-start mb-6">
-                            <div>
-                                <h2 className="text-xl font-bold text-white">Confirmar Eliminación</h2>
-                                <p className="text-gray-400 text-sm mt-1">Esta acción no se puede deshacer</p>
+            {
+                isDeleteModalOpen && selectedSale && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                        <div
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                            onClick={() => setIsDeleteModalOpen(false)}
+                        />
+                        <div className="relative bg-dark-800 rounded-2xl p-6 max-w-md w-full shadow-2xl border border-dark-700 animate-scale-in">
+                            <div className="flex justify-between items-start mb-6">
+                                <div>
+                                    <h2 className="text-xl font-bold text-white">Confirmar Eliminación</h2>
+                                    <p className="text-gray-400 text-sm mt-1">Esta acción no se puede deshacer</p>
+                                </div>
+                                <button
+                                    onClick={() => setIsDeleteModalOpen(false)}
+                                    className="text-gray-400 hover:text-white transition-colors"
+                                >
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
                             </div>
-                            <button
-                                onClick={() => setIsDeleteModalOpen(false)}
-                                className="text-gray-400 hover:text-white transition-colors"
-                            >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
 
-                        <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 mb-6">
-                            <p className="text-white font-medium mb-2">
-                                ¿Estás seguro de eliminar esta venta?
-                            </p>
-                            <p className="text-gray-400 text-sm">
-                                Venta #{selectedSale.id_venta} - {formatCurrency(Number(selectedSale.total))}
-                            </p>
-                        </div>
+                            <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 mb-6">
+                                <p className="text-white font-medium mb-2">
+                                    ¿Estás seguro de eliminar esta venta?
+                                </p>
+                                <p className="text-gray-400 text-sm">
+                                    Venta #{selectedSale.id_venta} - {formatCurrency(Number(selectedSale.total))}
+                                </p>
+                            </div>
 
-                        <div className="flex gap-3">
-                            <Button
-                                onClick={() => setIsDeleteModalOpen(false)}
-                                variant="secondary"
-                                className="flex-1"
-                            >
-                                Cancelar
-                            </Button>
-                            <Button
-                                onClick={handleDelete}
-                                className="flex-1 bg-red-600 hover:bg-red-700 text-white"
-                            >
-                                Eliminar
-                            </Button>
+                            <div className="flex gap-3">
+                                <Button
+                                    onClick={() => setIsDeleteModalOpen(false)}
+                                    variant="secondary"
+                                    className="flex-1"
+                                >
+                                    Cancelar
+                                </Button>
+                                <Button
+                                    onClick={handleDelete}
+                                    className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                                >
+                                    Eliminar
+                                </Button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 }

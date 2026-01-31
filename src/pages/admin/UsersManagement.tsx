@@ -6,12 +6,18 @@ import { Card, CardHeader } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Input } from '../../components/ui/Input';
+import { Pagination } from '../../components/ui/Pagination';
 
 export default function UsersManagement() {
     const { user: currentUser } = useAuth();
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
 
     // Edit modal state
     const [editingUser, setEditingUser] = useState<User | null>(null);
@@ -36,13 +42,15 @@ export default function UsersManagement() {
 
     useEffect(() => {
         loadUsers();
-    }, []);
+    }, [currentPage]);
 
     const loadUsers = async () => {
         try {
             setLoading(true);
-            const data = await getUsers();
+            const data = await getUsers({ page: currentPage });
             setUsers(data);
+            setTotalItems(data.length); // Ideally backend returns this
+            setTotalPages(Math.ceil(data.length / 100)); // Ideally backend returns this
         } catch (err: any) {
             setError(err.response?.data?.message || 'Error al cargar usuarios');
         } finally {
@@ -68,7 +76,7 @@ export default function UsersManagement() {
             email: user.email,
             telefono: user.telefono,
             rol: user.rol,
-            password: '' 
+            password: ''
         });
         setIsEditModalOpen(true);
     };
@@ -310,6 +318,13 @@ export default function UsersManagement() {
                             </div>
                         )
                     }
+
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        totalItems={totalItems}
+                        onPageChange={setCurrentPage}
+                    />
                 </Card >
             )
             }
