@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { salesService } from '../../services/sales.service';
 import { StatCard } from '../../components/dashboard/StatCard';
+import { MobileStatsCarousel } from '../../components/dashboard/MobileStatsCarousel';
 import { QuickActionCard } from '../../components/dashboard/QuickActionCard';
 import type { Sale } from '../../types';
 
@@ -71,37 +72,37 @@ export default function ClientDashboard() {
     }
 
     return (
-        <div className="p-4 sm:p-6 md:p-8 space-y-6 md:space-y-8 animate-fade-in">
+        <div className="p-3 sm:p-4 md:p-8 space-y-4 md:space-y-6 animate-fade-in">
             {/* Welcome Header */}
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 p-[2px]">
-                <div className="bg-dark-900 rounded-2xl p-6 md:p-8">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="relative overflow-hidden rounded-xl md:rounded-2xl bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 p-[2px]">
+                <div className="bg-dark-900 rounded-xl md:rounded-2xl p-4 md:p-6">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4">
                         <div>
-                            <div className="flex items-center gap-3">
-                                <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg">
-                                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="flex items-center gap-2 md:gap-3">
+                                <div className="p-1.5 md:p-2 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg">
+                                    <svg className="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                     </svg>
                                 </div>
-                                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold text-white">
+                                <h1 className="text-xl sm:text-2xl lg:text-3xl font-display font-bold text-white">
                                     Bienvenido, {user?.nombre}
                                 </h1>
                             </div>
-                            <p className="text-gray-400 text-sm sm:text-base">
-                                Tu panel de compras y favoritos
+                            <p className="text-gray-400 text-xs sm:text-sm md:text-base ml-8 md:ml-0 mt-1">
+                                Tu panel de compras y más.
                             </p>
                         </div>
-                        <div className="flex items-center gap-3 text-right">
-                            <div>
+                        <div className="flex items-center gap-2 md:gap-3 text-right">
+                            <div className="hidden sm:block">
                                 <p className="text-xs text-gray-500">Actualizado</p>
-                                <p className="text-sm font-medium text-gray-300 capitalize">{formatTime()}</p>
+                                <p className="text-xs md:text-sm font-medium text-gray-300 capitalize">{formatTime()}</p>
                             </div>
                             <button
                                 onClick={loadOrderStats}
-                                className="p-2 rounded-lg bg-dark-800 hover:bg-dark-700 border border-dark-600 transition-colors"
+                                className="p-1.5 md:p-2 rounded-lg bg-dark-800 hover:bg-dark-700 border border-dark-600 transition-colors"
                                 title="Actualizar datos"
                             >
-                                <svg className="w-5 h-5 text-gray-400 hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4 md:w-5 md:h-5 text-gray-400 hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                 </svg>
                             </button>
@@ -110,59 +111,127 @@ export default function ClientDashboard() {
                 </div>
             </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                <StatCard
-                    title="Mis Pedidos"
-                    value={orders.length}
-                    subtitle={`${completedOrders} completados`}
-                    icon={
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                        </svg>
-                    }
-                    variant="orders"
-                />
+            {/* Stats Grid - Desktop: Grid, Mobile: Carousel */}
+            <div className="relative">
+                {/* Desktop Grid (hidden on mobile) */}
+                <div className="hidden lg:grid grid-cols-4 gap-3 md:gap-4">
+                    <StatCard
+                        title="Total Pedidos"
+                        value={orders.length}
+                        subtitle={`${completedOrders} completados`}
+                        icon={
+                            <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                            </svg>
+                        }
+                        variant="orders"
+                    />
 
-                <StatCard
-                    title="Total Gastado"
-                    value={totalSpent}
-                    subtitle={`En ${orders.length} compras`}
-                    icon={
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    }
-                    variant="revenue"
-                    isCurrency
-                />
+                    <StatCard
+                        title="Total Gastado"
+                        value={totalSpent}
+                        subtitle={`En ${orders.length} compras`}
+                        icon={
+                            <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        }
+                        variant="revenue"
+                        isCurrency
+                    />
 
-                <StatCard
-                    title="Última Compra"
-                    value={orders.length}
-                    subtitle={lastOrder ? lastOrderDate : 'Sin compras'}
-                    icon={
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                    }
-                    variant="users"
-                />
+                    <StatCard
+                        title="Última Compra"
+                        value={lastOrder ? lastOrderDate : 'Sin compras'}
+                        subtitle=""
+                        icon={
+                            <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        }
+                        variant="inventory"
+                    />
+
+                    <StatCard
+                        title="Mis Compras"
+                        value={completedOrders}
+                        subtitle="Finalizadas"
+                        icon={
+                            <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        }
+                        variant="users"
+                    />
+                </div>
+
+                {/* Mobile Carousel (hidden on desktop) */}
+                <div className="lg:hidden">
+                    <MobileStatsCarousel
+                        stats={[
+                            {
+                                title: "Total Pedidos",
+                                value: orders.length,
+                                subtitle: `${completedOrders} completados`,
+                                icon: (
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                    </svg>
+                                ),
+                                variant: "orders" as const
+                            },
+                            {
+                                title: "Total Gastado",
+                                value: totalSpent,
+                                subtitle: `En ${orders.length} compras`,
+                                icon: (
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                ),
+                                variant: "revenue" as const,
+                                isCurrency: true
+                            },
+                            {
+                                title: "Última Compra",
+                                value: lastOrder ? lastOrderDate : 'Sin compras',
+                                subtitle: "",
+                                icon: (
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                ),
+                                variant: "inventory" as const
+                            },
+                            {
+                                title: "Mis Compras",
+                                value: completedOrders,
+                                subtitle: "Finalizadas",
+                                icon: (
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                ),
+                                variant: "users" as const
+                            }
+                        ]}
+                    />
+                </div>
             </div>
 
             {/* Quick Actions */}
             <div>
-                <div className="flex items-center gap-3 mb-4 md:mb-6">
-                    <div className="p-2 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg">
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+                    <div className="p-1.5 md:p-2 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg">
+                        <svg className="w-4 h-4 md:w-5 md:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                     </div>
-                    <h2 className="text-xl md:text-2xl font-bold text-white">
+                    <h2 className="text-lg md:text-xl font-bold text-white">
                         Accesos Rápidos
                     </h2>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                     <QuickActionCard
                         title="Ver Catálogo"
                         description="Explorar motos"
@@ -204,29 +273,29 @@ export default function ClientDashboard() {
             {/* Recent Orders Section */}
             {orders.length > 0 && (
                 <div>
-                    <div className="flex items-center gap-3 mb-4 md:mb-6">
-                        <div className="p-2 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg">
-                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4">
+                        <div className="p-1.5 md:p-2 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg">
+                            <svg className="w-4 h-4 md:w-5 md:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                             </svg>
                         </div>
-                        <h2 className="text-xl md:text-2xl font-bold text-white">
+                        <h2 className="text-lg md:text-xl font-bold text-white">
                             Pedidos Recientes
                         </h2>
                     </div>
-                    <div className="space-y-3">
+                    <div className="space-y-2 md:space-y-3">
                         {orders.slice(0, 3).map((order) => (
                             <div
                                 key={order.id_venta}
-                                className="bg-dark-800 border border-dark-700 rounded-xl p-4 hover:border-primary-500/50 transition-colors"
+                                className="bg-dark-800 border border-dark-700 rounded-lg md:rounded-xl p-3 md:p-4 hover:border-primary-500/50 transition-colors"
                             >
-                                <div className="flex items-center justify-between">
-                                    <div className="flex-1">
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <p className="font-semibold text-white">
+                                <div className="flex items-center justify-between gap-3">
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2 mb-1.5">
+                                            <p className="font-semibold text-white text-sm md:text-base truncate">
                                                 Pedido #{order.id_venta}
                                             </p>
-                                            <span className={`text-xs px-2 py-1 rounded-full ${order.estado.toLowerCase().includes('completad') || order.estado.toLowerCase().includes('pagad')
+                                            <span className={`text-xs px-1.5 md:px-2 py-0.5 md:py-1 rounded-full whitespace-nowrap ${order.estado.toLowerCase().includes('completad') || order.estado.toLowerCase().includes('pagad')
                                                 ? 'bg-green-500/20 text-green-400'
                                                 : order.estado.toLowerCase().includes('pendiente')
                                                     ? 'bg-yellow-500/20 text-yellow-400'
@@ -235,16 +304,16 @@ export default function ClientDashboard() {
                                                 {order.estado}
                                             </span>
                                         </div>
-                                        <p className="text-sm text-gray-400">
+                                        <p className="text-xs md:text-sm text-gray-400 truncate">
                                             {new Date(order.fecha_venta).toLocaleDateString('es-ES', {
                                                 year: 'numeric',
-                                                month: 'long',
+                                                month: 'short',
                                                 day: 'numeric'
                                             })}
                                         </p>
                                     </div>
-                                    <div className="text-right">
-                                        <p className="text-lg font-bold text-white">
+                                    <div className="text-right flex-shrink-0">
+                                        <p className="text-base md:text-lg font-bold text-white">
                                             ${typeof order.total === 'string' ? parseFloat(order.total).toLocaleString() : order.total.toLocaleString()}
                                         </p>
                                     </div>

@@ -15,7 +15,6 @@ export default function Register() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // Bootstrap first admin - show special fields until there's an admin
     const [needsAdmin, setNeedsAdmin] = useState(false);
     const [rol, setRol] = useState('cliente');
     const [codigoSecreto, setCodigoSecreto] = useState('');
@@ -50,7 +49,6 @@ export default function Register() {
         try {
             const payload: any = { nombre, email, telefono, password };
 
-            // If no admin exists yet, include role and secret code
             if (needsAdmin && (rol === 'admin' || rol === 'empleado')) {
                 payload.rol = rol;
                 payload.codigo_secreto = codigoSecreto;

@@ -4,7 +4,7 @@ import { formatCurrency } from '../../utils/format';
 
 interface StatCardProps {
     title: string;
-    value: number;
+    value: number | string;
     subtitle: string;
     icon: React.ReactNode;
     trend?: {
@@ -43,7 +43,8 @@ const variantStyles = {
 };
 
 export function StatCard({ title, value, subtitle, icon, trend, variant, isCurrency = false }: StatCardProps) {
-    const animatedValue = useCounterAnimation(value, { duration: 2000 });
+    const numericValue = typeof value === 'string' ? 0 : value;
+    const animatedValue = useCounterAnimation(numericValue, { duration: 2000 });
     const [isVisible, setIsVisible] = useState(false);
     const styles = variantStyles[variant];
 
@@ -51,7 +52,11 @@ export function StatCard({ title, value, subtitle, icon, trend, variant, isCurre
         setIsVisible(true);
     }, []);
 
-    const displayValue = isCurrency ? formatCurrency(animatedValue) : animatedValue.toLocaleString();
+    const displayValue = typeof value === 'string'
+        ? value
+        : isCurrency
+            ? formatCurrency(animatedValue)
+            : animatedValue.toLocaleString();
 
     return (
         <div

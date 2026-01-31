@@ -11,6 +11,7 @@ import Categories from '../pages/public/Categories';
 import Reviews from '../pages/public/Reviews';
 import AboutUs from '../pages/public/AboutUs';
 import Faq from '../pages/public/Faq';
+import PaymentSelection from '../pages/public/PaymentSelection';
 
 export const publicRoutes = {
     path: '/',
@@ -22,6 +23,8 @@ export const publicRoutes = {
         { path: 'forgot-password', element: <ForgotPassword /> },
         { path: 'motorcycles', element: <MotorcyclesCatalog /> },
         { path: 'motorcycles/:id', element: <MotorcycleDetail /> },
+        { path: 'payment-selection', element: <PaymentSelection /> },
+        { path: 'payment-success', element: <PaymentSuccess /> },
         { path: 'pago-exitoso', element: <PaymentSuccess /> },
         { path: 'categories', element: <Categories /> },
         { path: 'reviews', element: <Reviews /> },
